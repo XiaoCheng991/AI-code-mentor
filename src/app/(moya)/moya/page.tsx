@@ -85,20 +85,29 @@ export default function MoyaPraisePage() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [musicLoaded, setMusicLoaded] = useState(false);
+  const [playError, setPlayError] = useState("");
+  const [hasStarted, setHasStarted] = useState(false);
 
   // 初始化音频
   useEffect(() => {
-    audioRef.current = new Audio(MUSIC_URL);
-    audioRef.current.loop = true; // 循环播放
+    const audio = new Audio(MUSIC_URL);
+    audio.loop = true;
+    audio.volume = 0.7; // 设置音量70%
     
-    audioRef.current.oncanplaythrough = () => {
+    // 预加载
+    audio.load();
+    
+    audio.oncanplaythrough = () => {
       setMusicLoaded(true);
     };
     
-    audioRef.current.onerror = () => {
-      console.log("音乐加载失败，请确保已添加音乐文件");
+    audio.onerror = (e) => {
+      console.error("音频加载失败:", e);
       setMusicLoaded(false);
+      setPlayError("音乐文件加载失败");
     };
+    
+    audioRef.current = audio;
     
     return () => {
       if (audioRef.current) {
@@ -112,40 +121,75 @@ export default function MoyaPraisePage() {
   const handleSurprise = () => {
     setShowSurprise(true);
     setShowBubbles(true);
-    
+
     // 随机选择一句夸赞
     const randomPraise = surprisePraises[Math.floor(Math.random() * surprisePraises.length)];
     setCurrentPraise(randomPraise);
-    
+
     // 3秒后关闭效果
     setTimeout(() => {
       setShowSurprise(false);
     }, 3000);
   };
 
-  // 切换音乐
+  // 切换音乐 - 修复移动端播放问题
   const toggleMusic = async () => {
-    if (!audioRef.current) {
-      alert("音乐文件还未加载，请稍等或检查音乐文件是否已放入 public/music 目录");
+    // 如果音频还没加载完成
+    if (!audioRef.current || !musicLoaded) {
+      setPlayError("音乐还在加载中，请稍等...");
       return;
     }
     
     try {
       if (isPlaying) {
+        // 暂停
         audioRef.current.pause();
         setIsPlaying(false);
       } else {
+        // 播放 - 移动端需要用户交互触发
+        // 先重置到开头，确保从头播放
+        audioRef.current.currentTime = 0;
+        
+        // 尝试播放
         await audioRef.current.play();
         setIsPlaying(true);
+        setHasStarted(true);
+        setPlayError("");
       }
-    } catch (error) {
+    } catch (error: any) {
+      // 处理移动端自动播放限制
       console.error("播放失败:", error);
-      alert("播放失败，请确保音乐文件已正确放置");
+      
+      if (error.name === "NotAllowedError") {
+        setPlayError("❌ 手机浏览器限制自动播放\n\n💡 请先点击页面任意位置，然后再点击播放按钮");
+      } else if (error.name === "AbortError") {
+        setPlayError("播放被中断，请重试");
+      } else {
+        setPlayError("播放失败，请重试");
+      }
+    }
+  };
+
+  // 处理首次用户交互（帮助解决移动端限制）
+  const handleFirstInteraction = async () => {
+    if (!hasStarted && musicLoaded && audioRef.current) {
+      try {
+        // 预播放一次，建立播放状态
+        await audioRef.current.play();
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setHasStarted(true);
+      } catch (e) {
+        // 忽略错误，用户稍后会自己点击播放
+      }
     }
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div 
+      className="min-h-screen relative overflow-hidden"
+      onClick={handleFirstInteraction}
+    >
       {/* 惊喜效果 */}
       <SurpriseEffect show={showSurprise} />
       
@@ -250,8 +294,7 @@ export default function MoyaPraisePage() {
             {/* 互动：点击获取更多夸奖 */}
             <div className="mb-8">
               <div className="text-center mb-4">
-                <button
-onClick={handleSurprise}
+                <button onClick={handleSurprise}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-full transition-all duration-300"
                 >
                   <Zap className="w-5 h-5" />
@@ -282,7 +325,7 @@ onClick={handleSurprise}
             </div>
 
             {/* 进度条：夸赞指数 */}
-            <div className="mb-8">
+            <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-white font-medium">今日夸赞指数</span>
                 <span className="text-white font-bold">{Math.min(clickCount * 10, 100)}%</span>
@@ -295,35 +338,54 @@ onClick={handleSurprise}
               </div>
             </div>
 
-            {/* 音乐开关 */}
-            <div className="text-center mb-8">
+            {/* 音乐开关 - 移动端友好 */}
+            <div className="text-center mb-6">
               <button
                 onClick={toggleMusic}
                 disabled={!musicLoaded}
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+                className={`inline-flex items-center gap-3 px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 ${
                   isPlaying 
-                    ? 'bg-pink-500 text-white animate-pulse' 
-                    : 'bg-white/20 hover:bg-white/30 text-white'
+                    ? 'bg-pink-500 text-white shadow-lg animate-pulse' 
+                    : 'bg-white/20 hover:bg-white/30 text-white shadow-md'
                 } ${!musicLoaded ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {isPlaying ? (
                   <>
-                    <Pause className="w-5 h-5" />
-                    <span>🎵 正在播放《失眠》...</span>
+                    <Pause className="w-6 h-6" />
+                    <span className="font-bold">🎵 正在播放《失眠》...</span>
+                    <span className="animate-bounce">💜</span>
                   </>
                 ) : (
                   <>
-                    <Play className="w-5 h-5" />
-                    <span>🎶 点击播放《失眠》</span>
+                    <Play className="w-6 h-6" />
+                    <span className="font-bold">🎶 点击播放《失眠》</span>
                   </>
                 )}
               </button>
-              {!musicLoaded && (
+              
+              {/* 错误/状态提示 */}
+              {playError && (
+                <div className="mt-4 p-4 bg-white/10 backdrop-blur-sm rounded-xl max-w-md mx-auto">
+                  <p className="text-white/90 text-sm whitespace-pre-line">{playError}</p>
+                </div>
+              )}
+              
+              {/* 加载提示 */}
+              {!musicLoaded && !playError && (
                 <p className="text-white/60 text-sm mt-2">
-                  💡 提示：请将《失眠》音乐文件放入 public/music/insomnia.mp3
+                  音乐加载中... ⏳
                 </p>
               )}
             </div>
+
+            {/* 移动端播放提示 */}
+            {isPlaying && (
+              <div className="text-center mb-6">
+                <p className="text-white/70 text-sm">
+                  💡 如果音乐没声音，请检查手机音量设置 🔊
+                </p>
+              </div>
+            )}
 
             {/* 装饰性分隔线 */}
             <div className="flex items-center justify-center gap-2 mb-8">
