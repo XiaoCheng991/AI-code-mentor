@@ -1,13 +1,13 @@
 "use client";
 
 import { Sparkles, Heart, Star, Crown, Smile, Sun, Moon, Flower, Music, Rainbow } from "lucide-react";
-import { friendConfig } from "./config";
+import { friendConfig } from "../config";
 
 // 夸赞词汇库
 const praiseEmojis = ["💖", "🌟", "💫", "⭐", "🌸", "💝", "🎀", "🦄", "🌺", "🎨"];
 
 export default function PraisePage() {
-  const { name, message, praiseWords, themeColor, signature } = friendConfig;
+  const { name, message, praiseWords, signature } = friendConfig;
 
   return (
     <div className="min-h-screen relative overflow-hidden">
