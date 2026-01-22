@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Sparkles, Heart, Star, Gift, Music, Zap, Crown, Smile, Sun, Moon, Flower, Rainbow, PartyPopper } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Sparkles, Heart, Star, Gift, Music, Zap, Crown, Smile, Sun, Moon, Flower, Rainbow, PartyPopper, Play, Pause, Volume2 } from "lucide-react";
 import { friendConfig } from "../config";
+
+// 音乐配置 - 把《失眠》音乐文件放到 public/music 目录下
+const MUSIC_URL = "/music/insomnia.mp3"; // 请放入音乐文件
 
 // 惊喜效果组件
 function SurpriseEffect({ show }: { show: boolean }) {
@@ -77,13 +80,38 @@ export default function MoyaPraisePage() {
   const [currentPraise, setCurrentPraise] = useState("");
   const [clickCount, setClickCount] = useState(0);
   const [showBubbles, setShowBubbles] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
 
-  // 显示惊喜
+  // 音乐播放器引用
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [musicLoaded, setMusicLoaded] = useState(false);
+
+  // 初始化音频
+  useEffect(() => {
+    audioRef.current = new Audio(MUSIC_URL);
+    audioRef.current.loop = true; // 循环播放
+    
+    audioRef.current.oncanplaythrough = () => {
+      setMusicLoaded(true);
+    };
+    
+    audioRef.current.onerror = () => {
+      console.log("音乐加载失败，请确保已添加音乐文件");
+      setMusicLoaded(false);
+    };
+    
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  // 处理惊喜
   const handleSurprise = () => {
     setShowSurprise(true);
     setShowBubbles(true);
-    setIsPlaying(true);
     
     // 随机选择一句夸赞
     const randomPraise = surprisePraises[Math.floor(Math.random() * surprisePraises.length)];
@@ -95,9 +123,25 @@ export default function MoyaPraisePage() {
     }, 3000);
   };
 
-  // 切换音乐效果（模拟）
-  const toggleMusic = () => {
-    setIsPlaying(!isPlaying);
+  // 切换音乐
+  const toggleMusic = async () => {
+    if (!audioRef.current) {
+      alert("音乐文件还未加载，请稍等或检查音乐文件是否已放入 public/music 目录");
+      return;
+    }
+    
+    try {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        await audioRef.current.play();
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.error("播放失败:", error);
+      alert("播放失败，请确保音乐文件已正确放置");
+    }
   };
 
   return (
@@ -251,15 +295,34 @@ onClick={handleSurprise}
               </div>
             </div>
 
-            {/* 音乐开关（模拟） */}
+            {/* 音乐开关 */}
             <div className="text-center mb-8">
               <button
                 onClick={toggleMusic}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-full transition-all duration-300"
+                disabled={!musicLoaded}
+                className={`inline-flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+                  isPlaying 
+                    ? 'bg-pink-500 text-white animate-pulse' 
+                    : 'bg-white/20 hover:bg-white/30 text-white'
+                } ${!musicLoaded ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                <Music className={`w-5 h-5 ${isPlaying ? 'animate-spin' : ''}`} style={{ animationDuration: '3s' }} />
-                <span>{isPlaying ? '🎵 音乐播放中...' : '🎶 点击播放音乐'}</span>
+                {isPlaying ? (
+                  <>
+                    <Pause className="w-5 h-5" />
+                    <span>🎵 正在播放《失眠》...</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-5 h-5" />
+                    <span>🎶 点击播放《失眠》</span>
+                  </>
+                )}
               </button>
+              {!musicLoaded && (
+                <p className="text-white/60 text-sm mt-2">
+                  💡 提示：请将《失眠》音乐文件放入 public/music/insomnia.mp3
+                </p>
+              )}
             </div>
 
             {/* 装饰性分隔线 */}
