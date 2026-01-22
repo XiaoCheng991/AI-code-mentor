@@ -35,6 +35,7 @@
     "lucide-react": "^0.447.0",
     "monaco-editor": "^0.52.0",
     "next": "14.2.14",
+    "next-themes": "^0.4.6",
     "openai": "^4.68.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

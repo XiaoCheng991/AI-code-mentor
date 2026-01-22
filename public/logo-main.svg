@@ -1,0 +1,85 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景渐变 -->
+  <defs>
+    <!-- 主背景渐变 -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 液态玻璃光泽 -->
+    <linearGradient id="glassShine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.4" />
+      <stop offset="50%" style="stop-color:#ffffff;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </linearGradient>
+    
+    <!-- 内阴影 -->
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
+      <feOffset dx="0" dy="4" result="offsetblur"/>
+      <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="inverse"/>
+      <feFlood flood-color="#000" flood-opacity="0.15" result="color"/>
+      <feComposite in2="inverse" operator="in" result="shadow"/>
+      <feComposite in="SourceGraphic" in2="shadow" operator="over"/>
+    </filter>
+    
+    <!-- 柔和外阴影 -->
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="12" stdDeviation="24" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    
+    <!-- 发光效果 -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- 主背景圆角矩形（液态玻璃效果） -->
+  <rect x="40" y="40" width="320" height="320" rx="80" ry="80" fill="url(#bgGradient)" filter="url(#softShadow)"/>
+  
+  <!-- 内层玻璃效果 -->
+  <rect x="55" y="55" width="290" height="290" rx="70" ry="70" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+  
+  <!-- 高光效果 -->
+  <ellipse cx="160" cy="120" rx="100" ry="60" fill="url(#glassShine)" opacity="0.6"/>
+  
+  <!-- 核心图案：抽象的代码/AI符号 -->
+  <g transform="translate(200, 200)">
+    <!-- 左侧括号 < -->
+    <path d="M-80 0 L-110 -40 L-110 -20 L-80 20 Z" fill="white" opacity="0.95" filter="url(#glow)"/>
+    <path d="M-80 0 L-110 -40" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+    
+    <!-- 右侧括号 > -->
+    <path d="M80 0 L110 -40 L110 -20 L80 20 Z" fill="white" opacity="0.95" filter="url(#glow)"/>
+    <path d="M80 0 L110 -40" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+    
+    <!-- 中间的大脑/AI核心（圆形） -->
+    <circle cx="0" cy="-5" r="45" fill="white" opacity="0.95" filter="url(#innerShadow)"/>
+    
+    <!-- 大脑纹路 -->
+    <path d="M-25 -15 Q-15 -30 0 -25 Q15 -20 25 -15" stroke="#764ba2" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+    <path d="M-30 0 Q-20 -10 0 -5 Q20 0 30 5" stroke="#764ba2" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+    <path d="M-25 15 Q-15 5 0 10 Q15 15 25 20" stroke="#764ba2" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+    
+    <!-- 大脑中的代码符号 -->
+    <text x="0" y="8" text-anchor="middle" font-family="SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="bold" fill="#667eea">{ }</text>
+    
+    <!-- 下方的点/连接线 -->
+    <circle cx="-60" cy="60" r="6" fill="white" opacity="0.8"/>
+    <circle cx="0" cy="70" r="6" fill="white" opacity="0.8"/>
+    <circle cx="60" cy="60" r="6" fill="white" opacity="0.8"/>
+    
+    <!-- 连接线 -->
+    <path d="M-60 60 L0 70 L60 60" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  </g>
+  
+  <!-- 装饰性光晕 -->
+  <circle cx="120" cy="100" r="40" fill="white" opacity="0.1"/>
+  <circle cx="300" cy="280" r="30" fill="white" opacity="0.08"/>
+</svg>
