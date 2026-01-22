@@ -4,8 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { Sparkles, Heart, Star, Gift, Music, Zap, Crown, Smile, Sun, Moon, Flower, Rainbow, PartyPopper, Play, Pause, Volume2 } from "lucide-react";
 import { friendConfig } from "../config";
 
-// 音乐配置 - 把《失眠》音乐文件放到 public/music 目录下
-const MUSIC_URL = "/music/insomnia.mp3"; // 请放入音乐文件
+// 音乐配置 - 《失眠》音乐文件路径
+const MUSIC_URL = "/music/失眠.mp3"; // 音乐文件路径
 
 // 惊喜效果组件
 function SurpriseEffect({ show }: { show: boolean }) {
