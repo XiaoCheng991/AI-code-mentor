@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Sparkles, Heart, Star, Gift, Music, Zap, Crown, Smile, Sun, Moon, Flower, Rainbow, PartyPopper } from "lucide-react";
-import { friendConfig } from "./config";
+import { friendConfig } from "../config";
 
 // 惊喜效果组件
 function SurpriseEffect({ show }: { show: boolean }) {
