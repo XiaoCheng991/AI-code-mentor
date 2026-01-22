@@ -2,13 +2,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { supabaseServer } from "@/lib/supabase/server"
+import { createServerSupabaseClient } from "@/lib/supabase/server"
 import {Sparkles, BookOpen, Trophy, Clock, ArrowRight, Flame, Target, Brain, MessageCircle} from "lucide-react"
 
 export default async function DashboardPage() {
+  const supabase = createServerSupabaseClient();
   const {
     data: { user },
-  } = await supabaseServer.auth.getUser()
+  } = await supabase.auth.getUser()
 
   // Mock data for demonstration
   const stats = {

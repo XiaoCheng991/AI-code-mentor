@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { supabaseServer } from "@/lib/supabase/server"
+import { createServerSupabaseClient } from "@/lib/supabase/server"
 import { Code2, Home, BookOpen, MessageCircle, Trophy, Settings, LogOut, Sparkles, ChevronRight } from "lucide-react"
 
 export default async function DashboardLayout({
@@ -9,9 +9,10 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
+  const supabase = createServerSupabaseClient();
   const {
     data: { user },
-  } = await supabaseServer.auth.getUser()
+  } = await supabase.auth.getUser()
 
   if (!user) {
     redirect("/login")

@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabase/server";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
   try {
+    const supabase = createServerSupabaseClient();
     const { email, password, name } = await request.json();
 
     // 1. 注册用户
-    const { data: authData, error: authError } = await supabaseServer.auth.signUp({
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     // 3. 检查 public.users 表中的记录
-    const { data: userData, error: userError } = await supabaseServer
+    const { data: userData, error: userError } = await supabase
       .from("users")
       .select("*")
       .eq("id", authData.user?.id)
@@ -63,7 +64,8 @@ export async function POST(request: Request) {
 // GET 方法：查询当前用户数
 export async function GET() {
   try {
-    const { data: users, error: usersError } = await supabaseServer
+    const supabase = createServerSupabaseClient();
+    const { data: users, error: usersError } = await supabase
       .from("users")
       .select("id, email, name, current_skill_level, created_at")
       .order("created_at", { ascending: false })

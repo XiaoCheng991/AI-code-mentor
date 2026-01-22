@@ -1,4 +1,4 @@
-import { supabaseServer } from "@/lib/supabase/server"
+import { createServerSupabaseClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 
 export async function GET(request: Request) {
@@ -7,7 +7,8 @@ export async function GET(request: Request) {
   const next = searchParams.get("next") ?? "/dashboard"
 
   if (code) {
-    const { error } = await supabaseServer.auth.exchangeCodeForSession(code)
+    const supabase = createServerSupabaseClient();
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
       return redirect(next)
     }
