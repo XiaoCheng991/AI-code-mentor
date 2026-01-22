@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Sparkles, BookOpen, Trophy, Clock, Flame, ArrowRight, MessageCircle, Settings } from "lucide-react";
 
