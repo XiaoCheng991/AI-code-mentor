@@ -151,3 +151,11 @@ code {
 .chat-message-assistant {
   @apply bg-muted text-foreground rounded-2xl rounded-bl-sm;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, sans-serif;
+}
