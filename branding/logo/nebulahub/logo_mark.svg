@@ -1,0 +1,11 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NebulaHub mark">
+  <defs>
+    <linearGradient id="gradMark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="34" fill="url(#gradMark)"/>
+  <circle cx="72" cy="50" r="6" fill="#fff" opacity="0.95"/>
+  <circle cx="46" cy="72" r="6" fill="#fff" opacity="0.95"/>
+</svg>

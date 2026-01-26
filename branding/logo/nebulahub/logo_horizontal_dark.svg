@@ -1,0 +1,10 @@
+<svg width="600" height="180" viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NebulaHub dark logo">
+  <defs>
+    <linearGradient id="gradDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#93c5fd"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+  <path d="M30 110 Q60 70 120 70 Q170 50 230 70 Q280 40 340 60 Q400 40 460 60 Q500 70 560 90 L560 140 L30 140 Z" fill="url(#gradDark)" opacity="0.95"/>
+  <text x="130" y="120" font-family="Inter, Arial" font-size="48" font-weight="700" fill="#fff">NebulaHub</text>
+</svg>

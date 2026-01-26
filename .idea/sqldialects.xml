@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/docs/db/im_system_schema.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/supabase/chat-schema.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/supabase/chat-setup.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/supabase/triggers/create_user_on_signup.sql" dialect="PostgreSQL" />
   </component>
 </project>
