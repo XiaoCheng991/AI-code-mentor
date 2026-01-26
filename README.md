@@ -68,12 +68,6 @@ npm install
 
 ### 3. 配置环境变量
 
-复制 `.env.local.example` 为 `.env.local`，并填写配置：
-
-```bash
-cp .env.local.example .env.local
-```
-
 **必需的环境变量**：
 
 ```env

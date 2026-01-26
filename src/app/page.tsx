@@ -6,34 +6,7 @@ import { Sparkles, BookOpen, Code2, Trophy, ArrowRight, Github } from "lucide-re
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
-      {/* Header */}
-      <header className="border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src="/logo_icon.svg" alt="NebulaHub Logo" style={{ height: 60, width: 'auto' }} />
-            <span className="text-xl font-bold">NebulaHub</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              功能特点
-            </Link>
-            <Link href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              如何使用
-            </Link>
-            <Link href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              定价
-            </Link>
-          </nav>
-          <div className="flex items-center gap-3">
-            <Link href="/login">
-              <Button variant="ghost">登录</Button>
-            </Link>
-            <Link href="/register">
-              <Button>开始学习</Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* 顶部导航统一由全局 GlobalHeader 处理 */}
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-24 text-center">
@@ -199,11 +172,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t py-12">
         <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Code2 className="h-6 w-6 text-primary" />
-              <span className="font-semibold">NebulaHub 橙光</span>
-            </div>
+          <div className="flex flex-col md:flex-row items-center justify-center">
             <p className="text-sm text-muted-foreground">
               © 2025 NebulaHub 橙光. 保留所有权利。
             </p>
