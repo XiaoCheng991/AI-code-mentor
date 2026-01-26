@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '即时通讯 | AI编程导师',
+  title: ' NebulaHub 橙光 - 即时通讯',
   description: '免登录的实时聊天工具',
 };
 

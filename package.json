@@ -1,7 +1,7 @@
 {
   "name": "ai-code-mentor",
   "version": "1.0.0",
-  "description": "AI编程导师 - 你的智能编程学习伙伴",
+  "description": "NebulaHub 橙光 - 面向朋友的小型实用站点",
   "private": true,
   "scripts": {
     "dev": "next dev",

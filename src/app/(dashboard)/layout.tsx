@@ -35,7 +35,7 @@ export default async function DashboardLayout({
           <div className="p-6 border-b">
             <Link href="/dashboard" className="flex items-center gap-2">
               <Code2 className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold">AI编程导师</span>
+              <span className="text-xl font-bold">NebulaHub 橙光</span>
             </Link>
           </div>
 

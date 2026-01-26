@@ -16,7 +16,7 @@
 ### 步骤 1：登录 Supabase Dashboard
 
 1. 打开 [Supabase Dashboard](https://supabase.com/dashboard)
-2. 选择您的项目 **AI编程导师** (或 `ai-code-mentor`)
+ 2. 选择您的项目 NebulaHub 橙光 (或 `ai-code-mentor`)
 
 ### 步骤 2：获取 API URL
 

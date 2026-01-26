@@ -129,7 +129,7 @@ export default function RegisterPage() {
           <div className="flex justify-center mb-4">
             <Link href="/" className="flex items-center gap-2">
               <Code2 className="h-10 w-10 text-primary" />
-              <span className="text-2xl font-bold">AI编程导师</span>
+              <span className="text-2xl font-bold">NebulaHub 橙光</span>
             </Link>
           </div>
           <CardTitle className="text-2xl">创建账户</CardTitle>

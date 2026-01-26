@@ -6,16 +6,12 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AI编程导师 - 你的智能编程学习伙伴",
-  description: "基于AI的个性化编程学习平台，从零开始学习编程，掌握实用技能",
-  keywords: ["编程学习", "AI导师", "编程教程", "Python学习", "JavaScript学习"],
+  title: "NebulaHub 橙光 - 你的实用朋友小站",
+  description: "一个面向朋友之间的实用小站，帮助协作、分享与日常生活的快速入口",
+  keywords: ["NebulaHub", "橙光", "实用站点", "朋友协作", "工具"],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body className={inter.className}>

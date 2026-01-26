@@ -10,8 +10,8 @@ export default function Home() {
       <header className="border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Code2 className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold">AI编程导师</span>
+            <img src="/logo_icon.svg" alt="NebulaHub Logo" style={{ height: 60, width: 'auto' }} />
+            <span className="text-xl font-bold">NebulaHub</span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -45,7 +45,7 @@ export default function Home() {
 
           <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6">
             你的
-            <span className="gradient-text"> 智能编程导师 </span>
+            <span className="gradient-text"> NebulaHub 橙光 </span>
           </h1>
 
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -68,16 +68,16 @@ export default function Home() {
             </Link>
           </div>
 
-          <p className="mt-4 text-sm text-muted-foreground">
-            7 天免费试用，无需信用卡
-          </p>
+            <p className="mt-4 text-sm text-muted-foreground">
+              7 天免费试用，无需信用卡
+            </p>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="container mx-auto px-4 py-24">
+          <section id="features" className="container mx-auto px-4 py-24">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">为什么选择 AI编程导师？</h2>
+          <h2 className="text-3xl font-bold mb-4">为什么选择 NebulaHub 橙光？</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             我们结合了人工智能和教学最佳实践，为你提供最优质的编程学习体验
           </p>
@@ -199,13 +199,13 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t py-12">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Code2 className="h-6 w-6 text-primary" />
-              <span className="font-semibold">AI编程导师</span>
+              <span className="font-semibold">NebulaHub 橙光</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2025 AI编程导师. 保留所有权利。
+              © 2025 NebulaHub 橙光. 保留所有权利。
             </p>
           </div>
         </div>
