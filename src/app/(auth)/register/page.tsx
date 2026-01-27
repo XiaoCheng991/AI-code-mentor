@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
 import { supabase } from "@/lib/supabase/client"
-import { Code2, Github, Mail, Lock, User, ArrowRight, Check } from "lucide-react"
+import { Github, Mail, Lock, User, ArrowRight, Check } from "lucide-react"
 
 export default function RegisterPage() {
   const [name, setName] = useState("")
@@ -126,14 +126,8 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <Link href="/" className="flex items-center gap-2">
-              <Code2 className="h-10 w-10 text-primary" />
-              <span className="text-2xl font-bold">NebulaHub 橙光</span>
-            </Link>
-          </div>
           <CardTitle className="text-2xl">创建账户</CardTitle>
-          <CardDescription>开始你的编程学习之旅</CardDescription>
+          <CardDescription>开始你的Enjoy时刻</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">

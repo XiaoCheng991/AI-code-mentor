@@ -9,13 +9,12 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
 import { supabase } from "@/lib/supabase/client"
-import { Code2, Github, Mail, Lock, ArrowRight } from "lucide-react"
+import { Github, Mail, Lock, ArrowRight } from "lucide-react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -90,14 +89,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <Link href="/" className="flex items-center gap-2">
-              <Code2 className="h-10 w-10 text-primary" />
-              <span className="text-2xl font-bold">NebulaHub 橙光</span>
-            </Link>
-          </div>
           <CardTitle className="text-2xl">欢迎回来</CardTitle>
-          <CardDescription>登录你的账户，继续学习之旅</CardDescription>
+          <CardDescription>登录你的账户，继续Chat</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
