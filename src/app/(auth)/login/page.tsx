@@ -67,33 +67,9 @@ export default function LoginPage() {
     }
   }
 
-  const handleGithubLogin = async () => {
-    setLoading(true)
-
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "github",
-        options: {
-          redirectTo: `${location.origin}/auth/callback`,
-        },
-      })
-
-      if (error) {
-        toast({
-          title: "登录失败",
-          description: error.message,
-          variant: "destructive",
-        })
-      }
-    } catch (error) {
-      toast({
-        title: "错误",
-        description: "发生未知错误，请重试",
-        variant: "destructive",
-      })
-    } finally {
-      setLoading(false)
-    }
+  const handleGithubLogin = () => {
+    // 跳转到授权确认页面
+    window.location.href = "/oauth/consent";
   }
 
   if (loading) {
@@ -117,15 +93,12 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          <Button
-            variant="outline"
-            className="w-full gap-2"
-            onClick={handleGithubLogin}
-            disabled={loading}
-          >
-            <Github className="h-4 w-4" />
-            GitHub 账号登录
-          </Button>
+          <Link href="/oauth/consent" className="block">
+            <Button variant="outline" className="w-full gap-2" disabled={loading}>
+              <Github className="h-4 w-4" />
+              GitHub 账号登录
+            </Button>
+          </Link>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
