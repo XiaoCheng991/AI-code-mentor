@@ -108,6 +108,29 @@
   @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500;
 }
 
+/* NebulaHub brand gradient */
+.brand-gradient {
+  @apply bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent;
+}
+
+/* Glass card with border */
+.glass-card {
+  @apply bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl border border-white/40 dark:border-gray-700/40 rounded-3xl shadow-xl;
+}
+
+/* Soft shadow with color tint */
+.shadow-blue-lg {
+  @apply shadow-xl shadow-blue-500/10;
+}
+
+.shadow-purple-lg {
+  @apply shadow-xl shadow-purple-500/10;
+}
+
+.shadow-indigo-lg {
+  @apply shadow-xl shadow-indigo-500/10;
+}
+
 /* Loading skeleton */
 @keyframes shimmer {
   0% {

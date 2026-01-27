@@ -202,7 +202,7 @@ export default async function DashboardPage() {
               <Link href="/dashboard/chat">
                 <Button className="w-full gap-2" variant="outline">
                   <MessageCircle className="h-4 w-4" />
-                  向AI导师提问
+                  向AI提问
                 </Button>
               </Link>
             </CardContent>
