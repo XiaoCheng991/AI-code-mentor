@@ -100,7 +100,7 @@ export default function RegisterPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "github",
         options: {
-          redirectTo: `https://github.com/login/oauth/authorize?client_id=53132565-9697-48a6-b392-95ec6b3b5ef9&redirect_uri=https://www.xiaocheng991.site/oauth/redirect`,
+          redirectTo: ``,
         },
       })
 

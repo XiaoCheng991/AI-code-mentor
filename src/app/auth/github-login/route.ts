@@ -3,11 +3,12 @@ import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
   const supabase = createServerSupabaseClient();
+  const redirectTo = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/auth/callback`;
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "github",
     options: {
-      redirectTo: `https://github.com/login/oauth/authorize?client_id=53132565-9697-48a6-b392-95ec6b3b5ef9&redirect_uri=https://www.xiaocheng991.site/oauth/redirect`,
+      redirectTo: redirectTo,
       scopes: "read:user user:email",
     },
   });
@@ -18,6 +19,7 @@ export async function GET(request: Request) {
   }
 
   if (data.url) {
+    // 直接返回授权 URL，让浏览器重定向
     return redirect(data.url);
   }
 
