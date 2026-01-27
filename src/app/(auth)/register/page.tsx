@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -16,11 +16,20 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  // 两种注册方法
-  // 1. 邮箱注册
+  useEffect(() => {
+    // 检查是否已登录
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        router.replace("/dashboard")
+      } else {
+        setLoading(false)
+      }
+    })
+  }, [router])
+
   const handleEmailRegister = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -45,19 +54,17 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      console.log("开始调研Supabase注册")
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            full_name: name || email.split("@")[0],
+            username: name || email.split("@")[0],
+            display_name: name || email.split("@")[0],
           },
           emailRedirectTo: `${location.origin}/auth/callback`,
         },
       })
-
-      console.log("注册出错", error)
 
       if (error) {
         toast({
@@ -86,7 +93,6 @@ export default function RegisterPage() {
     }
   }
 
-  // 2. GitHub注册
   const handleGithubRegister = async () => {
     setLoading(true)
 
@@ -116,18 +122,29 @@ export default function RegisterPage() {
     }
   }
 
-  // 3. 密码校验
   const passwordRequirements = [
     { met: password.length >= 6, text: "至少6个字符" },
     { met: password === confirmPassword && password.length > 0, text: "两次密码一致" },
   ]
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
+        <Card className="w-full max-w-md">
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">检查登录状态中...</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">创建账户</CardTitle>
-          <CardDescription>开始你的Enjoy时刻</CardDescription>
+          <CardDescription>开始使用 NebulaHub 橙光</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
@@ -187,7 +204,7 @@ export default function RegisterPage() {
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-id="password"
+                  id="password"
                   type="password"
                   placeholder="设置密码"
                   className="pl-10"
@@ -243,16 +260,6 @@ id="password"
             已有账号？{" "}
             <Link href="/login" className="text-primary hover:underline font-medium">
               立即登录
-            </Link>
-          </p>
-          <p className="text-xs text-muted-foreground text-center">
-            注册即表示同意{" "}
-            <Link href="/terms" className="text-primary hover:underline">
-              服务条款
-            </Link>{" "}
-            和{" "}
-            <Link href="/privacy" className="text-primary hover:underline">
-              隐私政策
             </Link>
           </p>
         </CardFooter>

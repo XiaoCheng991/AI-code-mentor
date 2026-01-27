@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -14,7 +14,19 @@ import { Github, Mail, Lock, ArrowRight } from "lucide-react"
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+
+  useEffect(() => {
+    // 检查是否已登录
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        router.replace("/dashboard")
+      } else {
+        setLoading(false)
+      }
+    })
+  }, [router])
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,9 +52,8 @@ export default function LoginPage() {
         description: "欢迎回来！正在跳转...",
       })
 
-      // 等待一下让cookie同步，然后强制跳转
       setTimeout(() => {
-        window.location.href = '/dashboard'
+        window.location.href = "/dashboard"
       }, 500)
 
     } catch (error) {
@@ -85,12 +96,24 @@ export default function LoginPage() {
     }
   }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
+        <Card className="w-full max-w-md">
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">检查登录状态中...</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">欢迎回来</CardTitle>
-          <CardDescription>登录你的账户，继续Chat</CardDescription>
+          <CardDescription>登录你的账户，继续使用 NebulaHub</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
