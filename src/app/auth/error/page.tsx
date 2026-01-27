@@ -1,6 +1,7 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,7 +16,7 @@ const errorMessages: Record<string, string> = {
   default: "认证过程中出现错误，请稍后重试",
 }
 
-export default function AuthErrorPage() {
+function AuthErrorContent() {
   const searchParams = useSearchParams()
   const error = searchParams.get("error") || "default"
   const errorDescription = searchParams.get("error_description")
@@ -44,7 +45,6 @@ export default function AuthErrorPage() {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {/* 错误详情 */}
           {showDetails && (
             <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
               <p className="text-sm text-red-700 dark:text-red-300 font-medium">
@@ -56,7 +56,6 @@ export default function AuthErrorPage() {
             </div>
           )}
 
-          {/* 提示信息 */}
           <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
             <p className="text-sm text-blue-700 dark:text-blue-300">
               常见原因：
@@ -68,7 +67,6 @@ export default function AuthErrorPage() {
             </ul>
           </div>
 
-          {/* 操作按钮 */}
           <div className="space-y-3">
             <Button
               onClick={() => window.location.href = "/oauth/consent"}
@@ -95,5 +93,30 @@ export default function AuthErrorPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+function AuthErrorFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 p-4">
+      <Card className="w-full max-w-md glass border-0 shadow-2xl">
+        <CardHeader className="text-center pb-2">
+          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400 animate-pulse" />
+          </div>
+          <CardTitle className="text-2xl text-red-700 dark:text-red-400">
+            加载中...
+          </CardTitle>
+        </CardHeader>
+      </Card>
+    </div>
+  )
+}
+
+export default function AuthErrorPage() {
+  return (
+    <Suspense fallback={<AuthErrorFallback />}>
+      <AuthErrorContent />
+    </Suspense>
   )
 }
