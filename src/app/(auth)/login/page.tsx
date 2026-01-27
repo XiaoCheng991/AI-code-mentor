@@ -73,7 +73,7 @@ export default function LoginPage() {
     setShowConsentModal(true)
   }
 
-  const handleConsentContinue = async () => {
+  const handleNewWindowLogin = async () => {
     // 1. 立即打开新窗口以避免浏览器拦截弹窗
     const newWindow = window.open('', '_blank')
     
@@ -132,6 +132,29 @@ export default function LoginPage() {
         variant: "destructive",
       })
     } finally {
+      setConsentLoading(false)
+    }
+  }
+
+  const handleRedirectLogin = async () => {
+    setConsentLoading(true)
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          scopes: 'read:user user:email',
+        },
+      })
+
+      if (error) throw error
+      // 成功后 supabase 会自动处理跳转，无需手动操作
+    } catch (error: any) {
+      toast({
+        title: "错误",
+        description: error.message || "发生未知错误，请重试",
+        variant: "destructive",
+      })
       setConsentLoading(false)
     }
   }
@@ -274,13 +297,17 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="flex gap-2 pt-3">
-            <Button variant="outline" className="flex-1" onClick={() => setShowConsentModal(false)}>
-              取消
-            </Button>
-            <Button className="flex-1 gap-2 bg-gray-800 hover:bg-gray-900 text-white" onClick={handleConsentContinue} disabled={consentLoading}>
+          <div className="flex flex-col gap-3 pt-3">
+            <Button className="w-full gap-2 bg-gray-800 hover:bg-gray-900 text-white" onClick={handleNewWindowLogin} disabled={consentLoading}>
               <Github className="h-4 w-4" />
-              {consentLoading ? "跳转中..." : "确认授权"}
+              {consentLoading ? "跳转中..." : "新窗口授权 (推荐)"}
+            </Button>
+            <Button variant="outline" className="w-full gap-2" onClick={handleRedirectLogin} disabled={consentLoading}>
+              <ArrowRight className="h-4 w-4" />
+              {consentLoading ? "跳转中..." : "本页直接跳转授权"}
+            </Button>
+            <Button variant="ghost" className="w-full" onClick={() => setShowConsentModal(false)}>
+              取消
             </Button>
           </div>
         </DialogContent>

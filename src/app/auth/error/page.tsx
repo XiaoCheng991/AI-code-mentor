@@ -1,11 +1,13 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, RefreshCw, Home, ArrowLeft } from "lucide-react"
+import { supabase } from "@/lib/supabase/client"
+import { toast } from "@/components/ui/use-toast"
 
 const errorMessages: Record<string, string> = {
   auth_callback_error: "认证回调失败，请稍后重试",
@@ -23,6 +25,29 @@ function AuthErrorContent() {
 
   const errorMessage = errorMessages[error] || errorMessages.default
   const showDetails = !!errorDescription
+  const [loading, setLoading] = useState(false)
+
+  const handleRetry = async () => {
+    setLoading(true)
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          scopes: 'read:user user:email',
+        },
+      })
+
+      if (error) throw error
+    } catch (error: any) {
+      toast({
+        title: "错误",
+        description: error.message || "发生未知错误，请重试",
+        variant: "destructive",
+      })
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 p-4">
@@ -69,26 +94,27 @@ function AuthErrorContent() {
 
           <div className="space-y-3">
             <Button
-              onClick={() => window.location.href = "/oauth/consent"}
+              onClick={handleRetry}
+              disabled={loading}
               className="w-full gap-2 rounded-xl py-6 bg-gray-800 hover:bg-gray-900 text-white"
             >
-              <RefreshCw className="h-5 w-5" />
-              重新授权
+              <RefreshCw className={`h-5 w-5 ${loading ? "animate-spin" : ""}`} />
+              {loading ? "正在跳转..." : "重新授权"}
             </Button>
 
-            <Link href="/" className="block">
-              <Button variant="outline" className="w-full gap-2 rounded-xl py-6">
+            <Button variant="outline" className="w-full gap-2 rounded-xl py-6" asChild>
+              <Link href="/">
                 <Home className="h-4 w-4" />
                 返回首页
-              </Button>
-            </Link>
+              </Link>
+            </Button>
 
-            <Link href="/login" className="block">
-              <Button variant="ghost" className="w-full gap-2 rounded-xl py-6">
+            <Button variant="ghost" className="w-full gap-2 rounded-xl py-6" asChild>
+              <Link href="/login">
                 <ArrowLeft className="h-4 w-4" />
                 返回登录页
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </CardContent>
       </Card>
