@@ -20,12 +20,6 @@ export default function LoginPage() {
   const [consentLoading, setConsentLoading] = useState(false)
   const router = useRouter()
 
-  const permissions = [
-    { name: "公开资料", description: "获取你的公开用户名、头像和邮箱", required: true },
-    { name: "邮箱访问", description: "读取你的邮箱地址用于账号关联", required: true },
-    { name: "无写入权限", description: "我们不会修改你的 GitHub 账户", required: false },
-  ]
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
@@ -80,21 +74,61 @@ export default function LoginPage() {
   }
 
   const handleConsentContinue = async () => {
+    // 1. 立即打开新窗口以避免浏览器拦截弹窗
+    const newWindow = window.open('', '_blank')
+    
+    if (!newWindow) {
+      toast({
+        title: "无法打开窗口",
+        description: "请允许浏览器弹窗以继续 GitHub 登录",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // 设置加载提示
+    newWindow.document.write(`
+      <html>
+        <head>
+          <title>正在跳转...</title>
+          <style>
+            body { font-family: system-ui, -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f9fafb; color: #111827; }
+            .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin-right: 12px; }
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+          </style>
+        </head>
+        <body>
+          <div class="loader"></div>
+          <div>正在连接 GitHub...</div>
+        </body>
+      </html>
+    `)
+
     setConsentLoading(true)
     try {
-      const response = await fetch("/auth/github-login")
-      const data = await response.json()
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          scopes: 'read:user user:email',
+          skipBrowserRedirect: true,
+        },
+      })
+
+      if (error) throw error
+
       if (data.url) {
-        window.open(
-          data.url,
-          '__blank',
-        )
+        newWindow.location.href = data.url
         setShowConsentModal(false)
+      } else {
+        newWindow.close()
+        throw new Error("未获取到授权链接")
       }
-    } catch (error) {
+    } catch (error: any) {
+      newWindow.close()
       toast({
         title: "错误",
-        description: "发生未知错误，请重试",
+        description: error.message || "发生未知错误，请重试",
         variant: "destructive",
       })
     } finally {

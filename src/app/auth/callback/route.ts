@@ -11,12 +11,12 @@ export async function GET(request: Request) {
   // 如果 GitHub 返回错误
   if (error) {
     console.error("GitHub OAuth Error:", error, error_description)
-    return redirect(`/login?error=${encodeURIComponent(error_description || error)}`)
+    return redirect(`/auth/error?error=${encodeURIComponent(error)}&error_description=${encodeURIComponent(error_description || '')}`)
   }
 
   if (!code) {
     console.error("No code provided in callback")
-    return redirect("/login?error=no_code")
+    return redirect("/auth/error?error=no_code")
   }
 
   console.log("Received OAuth code, exchanging for session...")
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 
   if (exchangeError) {
     console.error("Exchange code error:", exchangeError)
-    return redirect(`/login?error=${encodeURIComponent(exchangeError.message)}`)
+    return redirect(`/auth/error?error=auth_callback_error&error_description=${encodeURIComponent(exchangeError.message)}`)
   }
 
   console.log("Session exchange successful, user:", data?.user?.email)
@@ -41,5 +41,5 @@ export async function GET(request: Request) {
   }
 
   console.error("Session not created after exchange")
-  return redirect("/login?error=session_creation_failed")
+  return redirect("/auth/error?error=session_creation_failed")
 }
