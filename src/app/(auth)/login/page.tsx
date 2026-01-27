@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
 import { supabase } from "@/lib/supabase/client"
-import { Github, Mail, Lock, ArrowRight, Check } from "lucide-react"
+import { Github, Mail, Lock, ArrowRight, Check, User, EyeOff, Shield } from "lucide-react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -193,48 +193,61 @@ export default function LoginPage() {
       </Card>
 
       <Dialog open={showConsentModal} onOpenChange={setShowConsentModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <div className="flex items-center justify-between">
-              <DialogTitle className="flex items-center gap-2">
-                <Github className="h-5 w-5" />
-                授权登录
-              </DialogTitle>
-            </div>
-            <DialogDescription>
+        <DialogContent className="sm:max-w-md bg-white dark:bg-gray-900 border-0 shadow-2xl">
+          <DialogHeader className="pb-2">
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-gray-800 to-gray-600 rounded-lg flex items-center justify-center">
+                <Github className="h-5 w-5 text-white" />
+              </div>
+              授权登录
+            </DialogTitle>
+            <DialogDescription className="text-sm ml-10">
               使用 GitHub 账号登录 NebulaHub
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <div className="space-y-3">
-              {permissions.map((perm, index) => (
-                <div key={index} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-gray-800">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${perm.required ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>
-                    <Check className="h-3.5 w-3.5" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-800 dark:text-white">
-                      {perm.name}
-                      {perm.required && <span className="ml-2 text-xs text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded">必需</span>}
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                      {perm.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-100 dark:border-blue-800">
+              <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                <User className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-slate-800 dark:text-white">公开资料</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">用户名、头像和邮箱</p>
+              </div>
+              <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-full">必需</span>
             </div>
 
-            <div className="flex gap-3">
-              <Button variant="outline" className="flex-1" onClick={() => setShowConsentModal(false)}>
-                返回
-              </Button>
-              <Button className="flex-1 gap-2 bg-gray-800 hover:bg-gray-900" onClick={handleConsentContinue} disabled={consentLoading}>
-                <Github className="h-4 w-4" />
-                {consentLoading ? "跳转中..." : "继续"}
-              </Button>
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-800">
+              <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
+                <Mail className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-slate-800 dark:text-white">邮箱访问</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">读取邮箱用于账号关联</p>
+              </div>
+              <span className="text-xs bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 px-2 py-0.5 rounded-full">必需</span>
             </div>
+
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-100 dark:border-green-800">
+              <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                <Shield className="h-4 w-4 text-green-600 dark:text-green-400" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-slate-800 dark:text-white">无写入权限</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">不会修改你的 GitHub 账户</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-2 pt-3">
+            <Button variant="outline" className="flex-1" onClick={() => setShowConsentModal(false)}>
+              取消
+            </Button>
+            <Button className="flex-1 gap-2 bg-gray-800 hover:bg-gray-900 text-white" onClick={handleConsentContinue} disabled={consentLoading}>
+              <Github className="h-4 w-4" />
+              {consentLoading ? "跳转中..." : "确认授权"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
