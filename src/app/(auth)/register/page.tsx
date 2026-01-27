@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
 import { supabase } from "@/lib/supabase/client"
-import { Github, Mail, Lock, User, ArrowRight, Check } from "lucide-react"
+import { Mail, Lock, User, ArrowRight, Check } from "lucide-react"
 
 export default function RegisterPage() {
   const [name, setName] = useState("")
@@ -20,7 +20,6 @@ export default function RegisterPage() {
   const router = useRouter()
 
   useEffect(() => {
-    // 检查是否已登录
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         router.replace("/dashboard")
@@ -93,35 +92,6 @@ export default function RegisterPage() {
     }
   }
 
-  const handleGithubRegister = async () => {
-    setLoading(true)
-
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "github",
-        options: {
-          redirectTo: ``,
-        },
-      })
-
-      if (error) {
-        toast({
-          title: "注册失败",
-          description: error.message,
-          variant: "destructive",
-        })
-      }
-    } catch (error) {
-      toast({
-        title: "错误",
-        description: "发生未知错误，请重试",
-        variant: "destructive",
-      })
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const passwordRequirements = [
     { met: password.length >= 6, text: "至少6个字符" },
     { met: password === confirmPassword && password.length > 0, text: "两次密码一致" },
@@ -148,25 +118,6 @@ export default function RegisterPage() {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          <Button
-            variant="outline"
-            className="w-full gap-2"
-            onClick={handleGithubRegister}
-            disabled={loading}
-          >
-            <Github className="h-4 w-4" />
-            GitHub 账号注册
-          </Button>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">或者使用邮箱</span>
-            </div>
-          </div>
-
           <form onSubmit={handleEmailRegister} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">昵称</Label>

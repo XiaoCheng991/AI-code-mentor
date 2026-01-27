@@ -7,18 +7,26 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
 import { supabase } from "@/lib/supabase/client"
-import { Github, Mail, Lock, ArrowRight } from "lucide-react"
+import { Github, Mail, Lock, ArrowRight, Check } from "lucide-react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(true)
+  const [showConsentModal, setShowConsentModal] = useState(false)
+  const [consentLoading, setConsentLoading] = useState(false)
   const router = useRouter()
 
+  const permissions = [
+    { name: "公开资料", description: "获取你的公开用户名、头像和邮箱", required: true },
+    { name: "邮箱访问", description: "读取你的邮箱地址用于账号关联", required: true },
+    { name: "无写入权限", description: "我们不会修改你的 GitHub 账户", required: false },
+  ]
+
   useEffect(() => {
-    // 检查是否已登录
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         router.replace("/dashboard")
@@ -67,6 +75,33 @@ export default function LoginPage() {
     }
   }
 
+  const handleGithubLogin = () => {
+    setShowConsentModal(true)
+  }
+
+  const handleConsentContinue = async () => {
+    setConsentLoading(true)
+    try {
+      const response = await fetch("/auth/github-login")
+      const data = await response.json()
+      if (data.url) {
+        window.open(
+          data.url,
+          '__blank',
+        )
+        setShowConsentModal(false)
+      }
+    } catch (error) {
+      toast({
+        title: "错误",
+        description: "发生未知错误，请重试",
+        variant: "destructive",
+      })
+    } finally {
+      setConsentLoading(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
@@ -88,12 +123,10 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          <Link href="/oauth/consent" className="block">
-            <Button variant="outline" className="w-full gap-2" disabled={loading}>
-              <Github className="h-4 w-4" />
-              GitHub 账号登录
-            </Button>
-          </Link>
+          <Button variant="outline" className="w-full gap-2" onClick={handleGithubLogin} disabled={loading}>
+            <Github className="h-4 w-4" />
+            GitHub 账号登录
+          </Button>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -158,6 +191,53 @@ export default function LoginPage() {
           </p>
         </CardFooter>
       </Card>
+
+      <Dialog open={showConsentModal} onOpenChange={setShowConsentModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center justify-between">
+              <DialogTitle className="flex items-center gap-2">
+                <Github className="h-5 w-5" />
+                授权登录
+              </DialogTitle>
+            </div>
+            <DialogDescription>
+              使用 GitHub 账号登录 NebulaHub
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-3">
+              {permissions.map((perm, index) => (
+                <div key={index} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-gray-800">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${perm.required ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>
+                    <Check className="h-3.5 w-3.5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-800 dark:text-white">
+                      {perm.name}
+                      {perm.required && <span className="ml-2 text-xs text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded">必需</span>}
+                    </p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      {perm.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-3">
+              <Button variant="outline" className="flex-1" onClick={() => setShowConsentModal(false)}>
+                返回
+              </Button>
+              <Button className="flex-1 gap-2 bg-gray-800 hover:bg-gray-900" onClick={handleConsentContinue} disabled={consentLoading}>
+                <Github className="h-4 w-4" />
+                {consentLoading ? "跳转中..." : "继续"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -55,7 +55,7 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
             <span className="text-[17px] font-bold text-slate-800 dark:text-white tracking-wide text-left">
               Nebula<span className="font-bold text-slate-500 dark:text-slate-400">Hub</span>
             </span>
-            <span className="text-[10.5px] font-bold text-orange-500 uppercase tracking-widest leading-none mt-0.5 text-left">
+            <span className="text-[11.5px] font-bold text-orange-500 tracking-widest leading-none mt-0.5 text-left">
               <span className="font-normal text-slate-500 tracking-wide">Nova Pro</span>
               <span className="mx-1.5 text-slate-400">|</span>
               橙光

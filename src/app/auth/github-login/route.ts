@@ -19,9 +19,9 @@ export async function GET(request: Request) {
   }
 
   if (data.url) {
-    // 直接返回授权 URL，让浏览器重定向
-    return redirect(data.url);
+    // 返回 OAuth URL，让客户端在新标签页中打开
+    return Response.json({ url: data.url });
   }
 
-  return redirect("/login?error=oauth_error");
+  return Response.json({ error: "oauth_error" }, { status: 400 });
 }
