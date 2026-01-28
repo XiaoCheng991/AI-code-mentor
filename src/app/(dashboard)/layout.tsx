@@ -55,24 +55,6 @@ export default async function DashboardLayout({
 
           {/* User */}
           <div className="p-4 border-t">
-            <Link href="/dashboard/settings" className="block mb-4">
-              <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-primary/5 transition-colors">
-                <UserAvatar
-                  avatarUrl={userProfile?.avatar_url}
-                  displayName={userProfile?.display_name}
-                  email={user.email}
-                  size="md"
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">
-                    {userProfile?.display_name || userProfile?.username || user.email?.split("@")[0]}
-                  </p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {user.email}
-                  </p>
-                </div>
-              </div>
-            </Link>
             <LogoutButton />
           </div>
         </div>

@@ -94,49 +94,17 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
 
         <div className="flex items-center gap-3">
           {user ? (
-            <div className="flex items-center gap-3">
-              <Link href="/dashboard/settings" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <UserAvatar
-                  avatarUrl={user.avatarUrl}
-                  displayName={user.displayName}
-                  email={user.email}
-                  size="sm"
-                />
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:block">
-                  {user.displayName || (user.email?.split('@')[0] ?? '')}
-                </span>
-              </Link>
-              <button
-                onClick={async () => {
-                  try {
-                    // 立即清除 UI 状态
-                    setUser(null);
-                    
-                    // 客户端清除 session
-                    await supabase.auth.signOut();
-                    
-                    // 调用服务端 API 清除 cookies
-                    await fetch('/auth/signout', {
-                      method: 'POST',
-                    });
-                    
-                    // 清除本地存储
-                    if (typeof window !== 'undefined') {
-                      localStorage.clear();
-                      sessionStorage.clear();
-                    }
-                    
-                    // 跳转到登录页
-                    window.location.href = '/login';
-                  } catch (error) {
-                    console.error('Logout error:', error);
-                  }
-                }}
-                className="px-4 py-1.5 rounded-xl text-sm font-medium bg-white/50 dark:bg-gray-800/50 hover:bg-white/80 dark:hover:bg-gray-700/80 border border-white/40 dark:border-gray-600/40 transition-all text-slate-700 dark:text-slate-300"
-              >
-                退出
-              </button>
-            </div>
+            <Link href="/dashboard/settings" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <UserAvatar
+                avatarUrl={user.avatarUrl}
+                displayName={user.displayName}
+                email={user.email}
+                size="sm"
+              />
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:block">
+                {user.displayName || (user.email?.split('@')[0] ?? '')}
+              </span>
+            </Link>
           ) : (
             <>
               <Link

@@ -46,7 +46,7 @@ export default function Home() {
             <Link href="/login">
               <Button size="lg" className="w-full sm:w-auto gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-lg shadow-blue-500/25 px-8">
                 <MessageCircle className="h-5 w-5" />
-                开始聊天
+                开始摸鱼
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
