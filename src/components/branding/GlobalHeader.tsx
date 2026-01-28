@@ -76,25 +76,25 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
   }, [initialUser]);
 
   return (
-    <header className={`w-full sticky top-0 z-50 glass border-b border-white/40 ${className}`} aria-label="站点头部">
-      <div className="container mx-auto px-4 py-2.5 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 -my-0.5">
-          <img src={src} alt="NebulaHub Logo" style={{ height: 42, width: 'auto' }} onError={handleError} />
-          <div className="flex flex-col w-[130px]">
-            <span className="text-[17px] font-bold text-slate-800 dark:text-white tracking-wide text-left">
-              Nebula<span className="font-bold text-slate-500 dark:text-slate-400">Hub</span>
+    <header className={`w-full sticky top-0 z-50 bg-white/80 dark:bg-gray-900/60 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm ${className}`} aria-label="站点头部">
+      <div className="container mx-auto px-6 py-3 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-3">
+          <img src={src} alt="NebulaHub Logo" style={{ height: 40, width: 'auto' }} onError={handleError} className="rounded-xl" />
+          <div className="flex flex-col">
+            <span className="text-lg font-bold text-slate-800 dark:text-white tracking-tight">
+              Nebula<span className="font-semibold text-slate-500 dark:text-slate-400">Hub</span>
             </span>
-            <span className="text-[11.5px] font-bold text-orange-500 tracking-widest leading-none mt-0.5 text-left">
-              <span className="font-normal text-slate-500 tracking-wide">Nova Pro</span>
+            <span className="text-[11px] font-medium text-orange-500 tracking-wide leading-tight">
+              <span className="text-slate-500">Nova Pro</span>
               <span className="mx-1.5 text-slate-400">|</span>
               橙光
             </span>
           </div>
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {user ? (
-            <Link href="/dashboard/settings" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Link href="/dashboard/settings" className="flex items-center gap-2.5 p-2 rounded-xl bg-gray-100/50 dark:bg-gray-800/50 hover:bg-gray-200/60 dark:hover:bg-gray-700/60 transition-all duration-200">
               <UserAvatar
                 avatarUrl={user.avatarUrl}
                 displayName={user.displayName}
@@ -109,13 +109,13 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
             <>
               <Link
                 href="/login"
-                className="px-5 py-2 rounded-xl text-sm font-medium bg-white/50 dark:bg-gray-800/50 hover:bg-white/80 dark:hover:bg-gray-700/80 border border-white/40 dark:border-gray-600/40 transition-all shadow-sm text-slate-700 dark:text-slate-300"
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-gray-100/60 dark:bg-gray-800/60 hover:bg-gray-200/80 dark:hover:bg-gray-700/80 border border-gray-300/50 dark:border-gray-600/50 transition-all text-slate-700 dark:text-slate-300"
               >
                 登录
               </Link>
               <Link
                 href="/register"
-                className="px-5 py-2 rounded-xl text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg shadow-blue-500/20 transition-all"
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white transition-all shadow-md shadow-blue-500/20"
               >
                 注册
               </Link>

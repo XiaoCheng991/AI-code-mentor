@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-export function LogoutButton({ className }: { className?: string }) {
+export function LogoutButton({ className, iconOnly }: { className?: string, iconOnly?: boolean }) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -39,13 +39,13 @@ export function LogoutButton({ className }: { className?: string }) {
 
   return (
     <Button
-      variant="ghost"
-      className={className || "w-full justify-start gap-2"}
+      variant="outline"
+      className={className || "w-full justify-start gap-2 rounded-2xl font-medium bg-white/80 dark:bg-gray-700/80 hover:bg-gray-100/80 dark:hover:bg-gray-600/80"}
       onClick={handleLogout}
       disabled={isLoading}
     >
       <LogOut className="h-4 w-4" />
-      {isLoading ? "退出中..." : "退出登录"}
+      {!iconOnly && (isLoading ? "退出中..." : "退出登录")}
     </Button>
   )
 }
