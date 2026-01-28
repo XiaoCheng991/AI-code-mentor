@@ -40,8 +40,25 @@ async function middleware(request: NextRequest) {
     }
   )
 
-  // 对于 auth 相关路由，确保 cookies 被正确处理
-  await supabase.auth.getSession()
+  // 获取当前会话
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  // 需要认证的路径
+  const protectedPaths = ['/dashboard', '/chat', '/drive', '/settings']
+  const isProtectedPath = protectedPaths.some(path => 
+    request.nextUrl.pathname === path || 
+    request.nextUrl.pathname.startsWith(path + '/')
+  )
+
+  // 如果访问受保护的路径但没有会话，则重定向到登录页
+  if (isProtectedPath && !session) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    url.search = `?redirectedFrom=${encodeURIComponent(request.url)}`
+    return NextResponse.redirect(url)
+  }
 
   return supabaseResponse
 }
