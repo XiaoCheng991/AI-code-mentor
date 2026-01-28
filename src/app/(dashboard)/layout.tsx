@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { createServerSupabaseClient } from "@/lib/supabase/server"
-import { Code2, Home, BookOpen, MessageCircle, Trophy, Settings, Sparkles, ChevronRight } from "lucide-react"
+import {MessageCircle, Settings, Sparkles, FolderUp, Home} from "lucide-react"
 import { LogoutButton } from "@/components/auth/LogoutButton"
-import { UserAvatar } from "@/components/ui/user-avatar"
+import { headers } from "next/headers"
+import { cache } from "react"
 
 export default async function DashboardLayout({
   children,
@@ -26,11 +27,22 @@ export default async function DashboardLayout({
     .eq('id', user.id)
     .single()
 
+  // 创建缓存的头部读取函数
+  const getCachedHeaders = cache(() => {
+    const heads = headers();
+    return {
+      url: heads.get('x-url'),
+    };
+  });
+  
+  const { url } = getCachedHeaders();
+  const currentPath = url ? new URL(url).pathname : '';
+  
   const navigation = [
-    { name: "首页", href: "/dashboard", icon: Home },
-    { name: "学习路径", href: "/dashboard/learning", icon: BookOpen },
-    { name: "AI对话", href: "/dashboard/chat", icon: MessageCircle },
-    { name: "成就", href: "/dashboard/achievements", icon: Trophy },
+    { name: "首页", href: "/", icon: Home },
+    { name: "仪表盘", href: "/dashboard", icon: Sparkles },
+    { name: "消息", href: "/dashboard/chat", icon: MessageCircle },
+    { name: "文件", href: "/dashboard/drive", icon: FolderUp },
     { name: "设置", href: "/dashboard/settings", icon: Settings },
   ]
 
@@ -41,20 +53,27 @@ export default async function DashboardLayout({
         <div className="flex flex-col h-full">
           {/* Navigation */}
           <nav className="flex-1 space-y-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-muted-foreground hover:bg-gray-200/50 hover:text-foreground transition-all duration-300 font-medium relative overflow-hidden"
-              >
-                <div className="relative w-5 h-5 flex-shrink-0 flex items-center justify-center">
-                  <item.icon className="h-5 w-5 absolute left-1/2 -translate-x-1/2 transition-transform duration-200 group-hover:scale-110" />
-                </div>
-                <span className="text-sm absolute left-16 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-32 truncate text-foreground font-medium origin-left">
-                  {item.name}
-                </span>
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              const isActive = currentPath === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`flex items-center gap-3.5 px-3 py-2.5 rounded-xl transition-all duration-300 font-medium relative overflow-hidden ${
+                    isActive 
+                      ? 'text-foreground bg-primary/10 hover:bg-primary/10' 
+                      : 'text-muted-foreground hover:bg-gray-200/50 hover:text-foreground'
+                  }`}
+                >
+                  <div className="relative w-5 h-5 flex-shrink-0 flex items-center justify-center">
+                    <item.icon className="h-5 w-5 absolute left-1/2 -translate-x-1/2 transition-transform duration-200 group-hover:scale-110" />
+                  </div>
+                  <span className="text-sm absolute left-16 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-32 truncate font-medium origin-left">
+                    {item.name}
+                  </span>
+                </Link>
+              );
+            })}
           </nav>
         </div>
       </aside>
@@ -65,7 +84,7 @@ export default async function DashboardLayout({
       </div>
 
       {/* Main content */}
-      <main className="pt-24 pl-24 transition-all duration-300">
+      <main className="pt-8 pl-24 transition-all duration-300">
         <div className="container mx-auto px-6 py-6">
           {children}
         </div>

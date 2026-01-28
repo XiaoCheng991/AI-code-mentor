@@ -94,16 +94,16 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
 
         <div className="flex items-center gap-2">
           {user ? (
-            <Link href="/dashboard/settings" className="flex items-center gap-2.5 p-2 rounded-xl bg-gray-100/50 dark:bg-gray-800/50 hover:bg-gray-200/60 dark:hover:bg-gray-700/60 transition-all duration-200">
+            <Link href="/dashboard/settings" className="flex items-center gap-2.5 p-2 rounded-xl bg-transparent hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:block">
+                Hi {user.displayName || (user.email?.split('@')[0] ?? '')}!
+              </span>
               <UserAvatar
                 avatarUrl={user.avatarUrl}
                 displayName={user.displayName}
                 email={user.email}
                 size="sm"
               />
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:block">
-                {user.displayName || (user.email?.split('@')[0] ?? '')}
-              </span>
             </Link>
           ) : (
             <>
