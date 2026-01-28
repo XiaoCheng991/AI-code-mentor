@@ -199,12 +199,14 @@ export default async function DashboardPage() {
                   </div>
                 </div>
               ))}
-              <Link href="/dashboard/chat">
-                <Button className="w-full gap-2" variant="outline">
-                  <MessageCircle className="h-4 w-4" />
-                  向AI提问
-                </Button>
-              </Link>
+              <div className="pt-2">
+                <Link href="/dashboard/chat">
+                  <Button className="w-full gap-2" variant="outline">
+                    <MessageCircle className="h-4 w-4" />
+                    向AI提问
+                  </Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </div>

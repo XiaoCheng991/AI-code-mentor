@@ -1,6 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   const cookieStore = cookies()
@@ -31,7 +31,27 @@ export async function POST(request: Request) {
     }
   )
 
-  await supabase.auth.signOut()
+  // 清除 Supabase session
+  await supabase.auth.signOut({ scope: 'local' })
 
-  return redirect("/login")
+  // 创建响应并手动清除所有 Supabase 相关 cookies
+  const response = NextResponse.redirect(new URL('/login', request.url))
+  
+  // 清除所有 Supabase auth cookies
+  const cookieNames = [
+    'sb-access-token',
+    'sb-refresh-token',
+    `sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0]}-auth-token`,
+  ]
+  
+  cookieNames.forEach(name => {
+    response.cookies.set({
+      name,
+      value: '',
+      maxAge: 0,
+      path: '/',
+    })
+  })
+
+  return response
 }

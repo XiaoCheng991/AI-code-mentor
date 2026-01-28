@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import GlobalHeader from '@/components/branding/GlobalHeader';
 import { Toaster } from "@/components/ui/toaster";
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,11 +20,41 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // 在服务端获取用户信息，传给 GlobalHeader
+  let initialUser: {
+    email: string;
+    displayName: string;
+    avatarUrl: string;
+  } | null = null;
+  
+  try {
+    const supabase = createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (user) {
+      // 获取 user_profiles 中的头像和显示名
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('avatar_url, display_name, username')
+        .eq('id', user.id)
+        .single();
+      
+      initialUser = {
+        email: user.email || '',
+        displayName: profile?.display_name || profile?.username || user.email?.split('@')[0] || '',
+        avatarUrl: profile?.avatar_url || '',
+      };
+    }
+  } catch (error) {
+    // 忽略错误，使用 null 作为默认值
+    console.error('Error fetching user in layout:', error);
+  }
+  
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body className={inter.className}>
-        <GlobalHeader />
+        <GlobalHeader initialUser={initialUser} />
         {children}
         <Toaster />
       </body>

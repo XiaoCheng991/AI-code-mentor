@@ -2,16 +2,23 @@
 import React from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
+import { UserAvatar } from '@/components/ui/user-avatar';
 
 type GlobalHeaderProps = {
   className?: string;
+  initialUser?: {
+    email?: string;
+    displayName?: string;
+    avatarUrl?: string;
+  } | null;
 };
 
 const GlobalHeader: React.FC<GlobalHeaderProps> = ({
   className = '',
+  initialUser = null,
 }) => {
   const [src, setSrc] = React.useState<string>('/logo_icon.svg');
-  const [user, setUser] = React.useState<{ email?: string; displayName?: string } | null>(null);
+  const [user, setUser] = React.useState<{ email?: string; displayName?: string; avatarUrl?: string } | null>(initialUser);
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
@@ -29,7 +36,19 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
         if (u && (u as any).email) {
           const email: string | undefined = (u as any).email;
           const displayName = email?.split('@')[0] ?? (u as any).user_metadata?.full_name ?? '';
-          setUser({ email, displayName });
+          
+          // 获取 user_profiles 中的头像
+          const { data: profile } = await supabase
+            .from('user_profiles')
+            .select('avatar_url, display_name, username')
+            .eq('id', u.id)
+            .single();
+          
+          setUser({ 
+            email, 
+            displayName: profile?.display_name || profile?.username || displayName,
+            avatarUrl: profile?.avatar_url 
+          });
         } else {
           setUser(null);
         }
@@ -37,14 +56,24 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
         setUser(null);
       }
     };
-    fetchUser();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+    
+    // 如果没有初始用户数据，才去获取
+    if (!initialUser) {
       fetchUser();
+    }
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+      } else {
+        fetchUser();
+      }
     });
+    
     return () => {
       subscription?.unsubscribe?.();
     };
-  }, []);
+  }, [initialUser]);
 
   return (
     <header className={`w-full sticky top-0 z-50 glass border-b border-white/40 ${className}`} aria-label="站点头部">
@@ -66,17 +95,42 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
         <div className="flex items-center gap-3">
           {user ? (
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">
-                {user.displayName?.charAt(0).toUpperCase() ?? (user.email?.[0] ?? '')}
-              </div>
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:block">
-                {user.displayName || (user.email?.split('@')[0] ?? '')}
-              </span>
+              <Link href="/dashboard/settings" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <UserAvatar
+                  avatarUrl={user.avatarUrl}
+                  displayName={user.displayName}
+                  email={user.email}
+                  size="sm"
+                />
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:block">
+                  {user.displayName || (user.email?.split('@')[0] ?? '')}
+                </span>
+              </Link>
               <button
                 onClick={async () => {
-                  await (supabase as any).auth.signOut();
-                  setUser(null);
-                  window.location.reload();
+                  try {
+                    // 立即清除 UI 状态
+                    setUser(null);
+                    
+                    // 客户端清除 session
+                    await supabase.auth.signOut();
+                    
+                    // 调用服务端 API 清除 cookies
+                    await fetch('/auth/signout', {
+                      method: 'POST',
+                    });
+                    
+                    // 清除本地存储
+                    if (typeof window !== 'undefined') {
+                      localStorage.clear();
+                      sessionStorage.clear();
+                    }
+                    
+                    // 跳转到登录页
+                    window.location.href = '/login';
+                  } catch (error) {
+                    console.error('Logout error:', error);
+                  }
                 }}
                 className="px-4 py-1.5 rounded-xl text-sm font-medium bg-white/50 dark:bg-gray-800/50 hover:bg-white/80 dark:hover:bg-gray-700/80 border border-white/40 dark:border-gray-600/40 transition-all text-slate-700 dark:text-slate-300"
               >
