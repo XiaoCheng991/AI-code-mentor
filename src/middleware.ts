@@ -30,7 +30,6 @@ async function middleware(request: NextRequest) {
           })
         },
         remove(name: string, options: CookieOptions) {
-          // 使用 delete() 方法删除 cookie，避免类型错误
           request.cookies.delete(name)
           supabaseResponse = NextResponse.next({
             request,
@@ -41,12 +40,8 @@ async function middleware(request: NextRequest) {
     }
   )
 
-  /*
-   * ✅ 优化说明：
-   * 只在有token时验证，不强制刷新session
-   * 原来调用 getUser() 会自动刷新token，增加延迟
-   * 现在只在需要时（如认证回调）才刷新
-   */
+  // 对于 auth 相关路由，确保 cookies 被正确处理
+  await supabase.auth.getSession()
 
   return supabaseResponse
 }
@@ -59,10 +54,9 @@ export const config = {
      * 匹配所有路径除了:
      * - _next/static (静态文件)
      * - _next/image (图片优化)
-     * - favabase/favicon.ico (网站图标)
+     * - favicon.ico (网站图标)
      * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
-     * - auth/callback (认证回调)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)).*)',
   ],
 }

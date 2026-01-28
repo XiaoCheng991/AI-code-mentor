@@ -73,69 +73,6 @@ export default function LoginPage() {
     setShowConsentModal(true)
   }
 
-  const handleNewWindowLogin = async () => {
-    // 1. 立即打开新窗口以避免浏览器拦截弹窗
-    const newWindow = window.open('', '_blank')
-    
-    if (!newWindow) {
-      toast({
-        title: "无法打开窗口",
-        description: "请允许浏览器弹窗以继续 GitHub 登录",
-        variant: "destructive",
-      })
-      return
-    }
-
-    // 设置加载提示
-    newWindow.document.write(`
-      <html>
-        <head>
-          <title>正在跳转...</title>
-          <style>
-            body { font-family: system-ui, -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f9fafb; color: #111827; }
-            .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin-right: 12px; }
-            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-          </style>
-        </head>
-        <body>
-          <div class="loader"></div>
-          <div>正在连接 GitHub...</div>
-        </body>
-      </html>
-    `)
-
-    setConsentLoading(true)
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'github',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-          scopes: 'read:user user:email',
-          skipBrowserRedirect: true,
-        },
-      })
-
-      if (error) throw error
-
-      if (data.url) {
-        newWindow.location.href = data.url
-        setShowConsentModal(false)
-      } else {
-        newWindow.close()
-        throw new Error("未获取到授权链接")
-      }
-    } catch (error: any) {
-      newWindow.close()
-      toast({
-        title: "错误",
-        description: error.message || "发生未知错误，请重试",
-        variant: "destructive",
-      })
-    } finally {
-      setConsentLoading(false)
-    }
-  }
-
   const handleRedirectLogin = async () => {
     setConsentLoading(true)
     try {
@@ -297,17 +234,13 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 pt-3">
-            <Button className="w-full gap-2 bg-gray-800 hover:bg-gray-900 text-white" onClick={handleNewWindowLogin} disabled={consentLoading}>
-              <Github className="h-4 w-4" />
-              {consentLoading ? "跳转中..." : "新窗口授权 (推荐)"}
-            </Button>
-            <Button variant="outline" className="w-full gap-2" onClick={handleRedirectLogin} disabled={consentLoading}>
-              <ArrowRight className="h-4 w-4" />
-              {consentLoading ? "跳转中..." : "本页直接跳转授权"}
-            </Button>
-            <Button variant="ghost" className="w-full" onClick={() => setShowConsentModal(false)}>
+          <div className="flex gap-3 pt-3">
+            <Button variant="outline" className="flex-1" onClick={() => setShowConsentModal(false)}>
               取消
+            </Button>
+            <Button className="flex-1 gap-2 bg-gray-800 hover:bg-gray-900 text-white" onClick={handleRedirectLogin} disabled={consentLoading}>
+              <Github className="h-4 w-4" />
+              {consentLoading ? "授权中..." : "确认授权"}
             </Button>
           </div>
         </DialogContent>

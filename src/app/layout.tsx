@@ -10,6 +10,13 @@ export const metadata: Metadata = {
   title: "NebulaHub 橙光 - 你的实用朋友小站",
   description: "一个面向朋友之间的实用小站，帮助协作、分享与日常生活的快速入口",
   keywords: ["NebulaHub", "橙光", "实用站点", "朋友协作", "工具"],
+  icons: {
+    icon: [
+      { url: '/logo_icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/logo_icon.svg',
+    shortcut: '/logo_icon.svg',
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

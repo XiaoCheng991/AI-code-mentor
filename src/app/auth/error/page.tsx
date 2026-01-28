@@ -30,15 +30,22 @@ function AuthErrorContent() {
   const handleRetry = async () => {
     setLoading(true)
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
           scopes: 'read:user user:email',
+          skipBrowserRedirect: true,
         },
       })
 
       if (error) throw error
+
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        throw new Error("未获取到授权链接")
+      }
     } catch (error: any) {
       toast({
         title: "错误",
