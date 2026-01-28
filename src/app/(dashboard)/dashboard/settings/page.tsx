@@ -10,12 +10,18 @@ import { supabase } from "@/lib/supabase/client"
 import { toast } from "@/components/ui/use-toast"
 import { Upload, Github, Mail, User, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { AvatarCropDialog } from "@/components/ui/avatar-crop-dialog"
 
 export default function SettingsPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
+  
+  // 裁剪相关状态
+  const [showCropDialog, setShowCropDialog] = useState(false)
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [originalFile, setOriginalFile] = useState<File | null>(null)
   
   const [userInfo, setUserInfo] = useState({
     email: "",
@@ -85,29 +91,63 @@ export default function SettingsPage() {
       return
     }
 
-    // 验证文件大小（2MB）
-    if (file.size > 2 * 1024 * 1024) {
+    // 验证文件大小（5MB 原图，裁剪后会压缩）
+    if (file.size > 5 * 1024 * 1024) {
       toast({
         title: "文件过大",
-        description: "图片大小不能超过 2MB",
+        description: "图片大小不能超过 5MB",
         variant: "destructive",
       })
       return
     }
 
-    setUploading(true)
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+    // 保存文件并显示裁剪对话框
+    setOriginalFile(file)
+    const imageUrl = URL.createObjectURL(file)
+    setSelectedImage(imageUrl)
+    setShowCropDialog(true)
+    
+    // 清空 input
+    e.target.value = ''
+  }
 
-      const fileExt = file.name.split('.').pop()
+  const handleCropComplete = async (croppedImageBlob: Blob) => {
+    setUploading(true)
+    setShowCropDialog(false)
+    
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      
+      if (userError) throw userError
+      if (!user) throw new Error('用户未登录')
+
+      // 如果有旧头像，先删除
+      if (userInfo.avatarUrl) {
+        try {
+          // 从 URL 提取文件路径
+          const oldFilePath = userInfo.avatarUrl.split('/').slice(-2).join('/')
+          if (oldFilePath && oldFilePath.startsWith('avatars/')) {
+            await supabase.storage
+              .from('user-uploads')
+              .remove([oldFilePath])
+          }
+        } catch (error) {
+          // 删除旧头像失败不影响新头像上传
+        }
+      }
+
+      // 使用裁剪后的图片
+      const fileExt = originalFile?.name.split('.').pop() || 'jpg'
       const fileName = `${user.id}_${Date.now()}.${fileExt}`
       const filePath = `avatars/${fileName}`
 
       // 上传到 Supabase Storage
-      const { error: uploadError } = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('user-uploads')
-        .upload(filePath, file, { upsert: true })
+        .upload(filePath, croppedImageBlob, { 
+          upsert: true,
+          contentType: 'image/jpeg'
+        })
 
       if (uploadError) throw uploadError
 
@@ -131,7 +171,6 @@ export default function SettingsPage() {
         description: "头像已更新",
       })
     } catch (error: any) {
-      console.error('Error uploading avatar:', error)
       toast({
         title: "上传失败",
         description: error.message || "无法上传头像",
@@ -139,6 +178,12 @@ export default function SettingsPage() {
       })
     } finally {
       setUploading(false)
+      // 清理临时图片URL
+      if (selectedImage) {
+        URL.revokeObjectURL(selectedImage)
+        setSelectedImage(null)
+      }
+      setOriginalFile(null)
     }
   }
 
@@ -320,7 +365,7 @@ export default function SettingsPage() {
                 disabled={uploading}
               />
               <p className="text-xs text-muted-foreground mt-2">
-                支持 JPG, PNG, GIF 格式，最大 2MB
+                支持 JPG, PNG, GIF 格式，最大 5MB
               </p>
             </div>
           </div>
@@ -463,6 +508,17 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* 头像裁剪对话框 */}
+      {selectedImage && (
+        <AvatarCropDialog
+          open={showCropDialog}
+          onOpenChange={setShowCropDialog}
+          imageSrc={selectedImage}
+          onCropComplete={handleCropComplete}
+        />
+      )}
     </div>
   )
 }
+

@@ -402,6 +402,61 @@ CREATE TRIGGER trigger_update_room_last_message
     FOR EACH ROW EXECUTE FUNCTION update_room_last_message();
 
 -- ============================================
+-- 第十部分：Storage 配置（用户头像上传）
+-- ============================================
+
+-- 创建 user-uploads 存储桶
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'user-uploads',
+  'user-uploads',
+  true, -- 公开访问
+  2097152, -- 2MB
+  ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+)
+ON CONFLICT (id) DO NOTHING;
+
+-- 允许所有人查看头像（公开读取）
+CREATE POLICY "Public Access - Anyone can view avatars"
+ON storage.objects FOR SELECT
+USING (
+  bucket_id = 'user-uploads' 
+  AND name LIKE 'avatars/%'
+);
+
+-- 允许用户上传自己的头像
+CREATE POLICY "Users can upload their own avatar"
+ON storage.objects FOR INSERT
+WITH CHECK (
+  bucket_id = 'user-uploads' 
+  AND name LIKE 'avatars/%'
+  AND name LIKE 'avatars/' || auth.uid()::text || '%'
+);
+
+-- 允许用户更新自己的头像
+CREATE POLICY "Users can update their own avatar"
+ON storage.objects FOR UPDATE
+USING (
+  bucket_id = 'user-uploads' 
+  AND name LIKE 'avatars/%'
+  AND name LIKE 'avatars/' || auth.uid()::text || '%'
+)
+WITH CHECK (
+  bucket_id = 'user-uploads' 
+  AND name LIKE 'avatars/%'
+  AND name LIKE 'avatars/' || auth.uid()::text || '%'
+);
+
+-- 允许用户删除自己的头像
+CREATE POLICY "Users can delete their own avatar"
+ON storage.objects FOR DELETE
+USING (
+  bucket_id = 'user-uploads' 
+  AND name LIKE 'avatars/%'
+  AND name LIKE 'avatars/' || auth.uid()::text || '%'
+);
+
+-- ============================================
 -- 验证安装
 -- ============================================
 
