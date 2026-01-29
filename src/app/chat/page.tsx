@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, Phone, Video, Search, Plus, Send, MoreVertical, Users, UserPlus } from "lucide-react";
 import Link from "next/link";
 import LayoutWithSidebar from "@/components/LayoutWithSidebar";
+import { formatTime } from "@/lib/utils";
 
 interface User {
   id: string;
@@ -214,7 +215,7 @@ export default function ChatPage() {
                     >
                       <p>{message.content}</p>
                       <p className={`text-xs mt-1 ${message.senderId === 'me' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
-                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {formatTime(message.timestamp instanceof Date ? message.timestamp : new Date(message.timestamp))}
                       </p>
                     </div>
                   </div>

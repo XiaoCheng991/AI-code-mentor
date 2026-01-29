@@ -130,3 +130,23 @@ export function getCategoryIcon(category: string): string {
   };
   return icons[category] || "📚";
 }
+
+export function formatTime(date: Date): string {
+  // 确保服务器和客户端时间格式一致
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
+}
+
+export function formatTimeWithAMPM(date: Date): string {
+  // 用于需要AM/PM格式的时间显示
+  let hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  
+  hours = hours % 12;
+  hours = hours ? hours : 12; // 0时应显示为12
+  const hoursStr = hours.toString().padStart(2, '0');
+  
+  return `${hoursStr}:${minutes} ${ampm}`;
+}

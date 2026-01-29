@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
+import { formatTime as utilsFormatTime } from '@/lib/utils';
 
 interface MessageItemProps {
   message: Message;
@@ -52,10 +53,9 @@ export const MessageItem: React.FC<MessageItemProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // 格式化时间
-  const formatTime = (dateString: string) => {
+  const formatMessageTime = (dateString: string) => {
     try {
-      return format(new Date(dateString), 'HH:mm', { locale: zhCN });
+      return utilsFormatTime(new Date(dateString));
     } catch {
       return '';
     }
@@ -165,7 +165,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
         {/* 时间 */}
         {showTime && (
           <span className="text-xs text-gray-400 mt-1 mx-1">
-            {formatTime(message.created_at)}
+            {formatMessageTime(message.created_at)}
           </span>
         )}
       </div>
