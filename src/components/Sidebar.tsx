@@ -12,7 +12,6 @@ interface NavItem {
 }
 
 const navigation: NavItem[] = [
-  { name: "首页", href: "/", icon: Home },
   { name: "仪表盘", href: "/dashboard", icon: Sparkles },
   { name: "消息", href: "/chat", icon: MessageCircle },
   { name: "文件", href: "/drive", icon: FolderUp },
@@ -21,28 +20,7 @@ const navigation: NavItem[] = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    // 从localStorage恢复展开状态
-    const savedExpanded = localStorage.getItem('sidebarExpanded');
-    if (savedExpanded) {
-      setIsExpanded(JSON.parse(savedExpanded));
-    }
-  }, []);
-
-  // 保存展开状态到localStorage
-  const handleMouseEnter = () => {
-    setIsExpanded(true);
-    localStorage.setItem('sidebarExpanded', JSON.stringify(true));
-  };
-
-  const handleMouseLeave = () => {
-    setIsExpanded(false);
-    localStorage.setItem('sidebarExpanded', JSON.stringify(false));
-  };
+  const [mounted] = useState(true);
 
   if (!mounted) {
     return null; // 防止SSR不匹配
@@ -50,11 +28,8 @@ export default function Sidebar() {
 
   return (
     <aside 
-      className={`fixed top-24 left-8 w-16 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30 pt-4 pb-4 px-2 z-30 overflow-visible transition-[width] duration-300 ease-in-out ${
-        isExpanded ? 'w-44' : 'w-16 hover:w-44'
-      }`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      className="fixed top-24 left-8 w-16 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30 pt-4 pb-4 px-2 z-30 overflow-visible"
+
     >
       <div className="flex flex-col h-full">
         {/* Navigation */}
@@ -76,10 +51,7 @@ export default function Sidebar() {
                   <div className={`flex-shrink-0 transition-colors duration-200 ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
                     <item.icon className="h-5 w-5" />
                   </div>
-                  {/* 导航文字 - 收起时隐藏，展开时显示 */}
-                  <span className={`text-sm ${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 whitespace-nowrap font-medium absolute left-9`}>
-                    {item.name}
-                  </span>
+
                 </Link>
               </div>
             );

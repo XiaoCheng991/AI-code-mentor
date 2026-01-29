@@ -14,7 +14,7 @@ export default function LayoutWithSidebar({ children }: LayoutWithSidebarProps) 
       <Sidebar />
       
       {/* Logout Button - aligned with sidebar */}
-      <div className="fixed bottom-4 left-8 z-50 group-hover:left-[12rem] transition-all duration-300">
+      <div className="fixed bottom-4 left-8 z-40 transition-all duration-300">
         <LogoutButton className="p-3 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30 hover:scale-110 transition-transform duration-200" iconOnly />
       </div>
 
