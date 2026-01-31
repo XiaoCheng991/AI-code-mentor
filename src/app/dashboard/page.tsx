@@ -43,31 +43,55 @@ export default async function DashboardPage() {
 
   return (
     <LayoutWithFullWidth>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">仪表盘</h1>
-          <p className="text-muted-foreground">
-            欢迎回来，这里是您的控制中心
-          </p>
+      <div className="space-y-8">
+        {/* Page Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-800">仪表盘</h1>
+            <p className="text-slate-500 mt-1">
+              欢迎回来，这里是您的控制中心
+            </p>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl border border-blue-500/20">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span className="text-sm text-slate-600 font-medium">系统运行正常</span>
+          </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat, index) => (
-            <Card key={index}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
+            <Card key={index} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
+              <div className={`h-1 ${
+                index === 0 ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
+                index === 1 ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
+                index === 2 ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+                'bg-gradient-to-r from-amber-500 to-orange-500'
+              }`} />
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">
+                    <p className="text-sm font-medium text-slate-500">
                       {stat.title}
                     </p>
-                    <p className="text-2xl font-bold mt-1">{stat.value}</p>
-                    <Badge variant="secondary" className="mt-2">
-                      {stat.change} <TrendingUp className="ml-1 h-3 w-3" />
-                    </Badge>
+                    <p className="text-2xl font-bold mt-1 text-slate-800">{stat.value}</p>
+                    <div className="flex items-center gap-1 mt-2">
+                      <TrendingUp className="h-3 w-3 text-green-500" />
+                      <span className="text-xs font-medium text-green-600">{stat.change}</span>
+                    </div>
                   </div>
-                  <div className="rounded-full bg-primary/10 p-3">
-                    <stat.icon className="h-6 w-6 text-primary" />
+                  <div className={`p-3 rounded-xl ${
+                    index === 0 ? 'bg-blue-500/10' :
+                    index === 1 ? 'bg-green-500/10' :
+                    index === 2 ? 'bg-purple-500/10' :
+                    'bg-amber-500/10'
+                  } group-hover:scale-110 transition-transform`}>
+                    <stat.icon className={`h-5 w-5 ${
+                      index === 0 ? 'text-blue-500' :
+                      index === 1 ? 'text-green-500' :
+                      index === 2 ? 'text-purple-500' :
+                      'text-amber-500'
+                    }`} />
                   </div>
                 </div>
               </CardContent>
@@ -77,17 +101,24 @@ export default async function DashboardPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Activity */}
-          <Card>
+          <Card className="overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-purple-500 to-pink-500" />
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-4">最近活动</h3>
-              <div className="space-y-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-slate-800">最近活动</h3>
+                <span className="text-xs px-2 py-1 bg-slate-100 rounded-full text-slate-500">实时</span>
+              </div>
+              <div className="space-y-3">
                 {recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{activity.user}</p>
-                      <p className="text-sm text-muted-foreground">{activity.action}</p>
+                  <div key={activity.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                      <span className="text-sm font-medium text-blue-600">{activity.user.charAt(0)}</span>
                     </div>
-                    <span className="text-sm text-muted-foreground">{activity.time}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-slate-700">{activity.user}</p>
+                      <p className="text-sm text-slate-400">{activity.action}</p>
+                    </div>
+                    <span className="text-xs text-slate-400">{activity.time}</span>
                   </div>
                 ))}
               </div>
@@ -95,25 +126,34 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Quick Actions */}
-          <Card>
+          <Card className="overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-cyan-500 to-blue-500" />
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-4">快捷操作</h3>
+              <h3 className="text-lg font-semibold mb-4 text-slate-800">快捷操作</h3>
               <div className="grid grid-cols-2 gap-3">
-                <Button variant="outline" className="h-16 flex flex-col items-center justify-center gap-1">
-                  <MessageCircle className="h-5 w-5" />
-                  <span className="text-xs">消息</span>
+                <Button variant="outline" className="h-20 flex-col items-center justify-center gap-2 hover:bg-blue-50 hover:border-blue-200 transition-all group">
+                  <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                    <MessageCircle className="h-5 w-5 text-blue-500 group-hover:text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-slate-600">消息</span>
                 </Button>
-                <Button variant="outline" className="h-16 flex flex-col items-center justify-center gap-1">
-                  <FileText className="h-5 w-5" />
-                  <span className="text-xs">文件</span>
+                <Button variant="outline" className="h-20 flex-col items-center justify-center gap-2 hover:bg-green-50 hover:border-green-200 transition-all group">
+                  <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500 group-hover:text-white transition-colors">
+                    <FileText className="h-5 w-5 text-green-500 group-hover:text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-slate-600">文件</span>
                 </Button>
-                <Button variant="outline" className="h-16 flex flex-col items-center justify-center gap-1">
-                  <Settings className="h-5 w-5" />
-                  <span className="text-xs">设置</span>
+                <Button variant="outline" className="h-20 flex-col items-center justify-center gap-2 hover:bg-purple-50 hover:border-purple-200 transition-all group">
+                  <div className="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                    <Settings className="h-5 w-5 text-purple-500 group-hover:text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-slate-600">设置</span>
                 </Button>
-                <Button variant="outline" className="h-16 flex flex-col items-center justify-center gap-1">
-                  <BarChart3 className="h-5 w-5" />
-                  <span className="text-xs">分析</span>
+                <Button variant="outline" className="h-20 flex-col items-center justify-center gap-2 hover:bg-amber-50 hover:border-amber-200 transition-all group">
+                  <div className="p-2 rounded-lg bg-amber-500/10 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                    <BarChart3 className="h-5 w-5 text-amber-500 group-hover:text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-slate-600">分析</span>
                 </Button>
               </div>
             </CardContent>
@@ -121,18 +161,22 @@ export default async function DashboardPage() {
         </div>
 
         {/* Welcome Section */}
-        <Card>
+        <Card className="overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500" />
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
-              <div className="rounded-full bg-primary/10 p-3">
-                <Sparkles className="h-6 w-6 text-primary" />
+              <div className="p-3 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20">
+                <Sparkles className="h-6 w-6 text-amber-500" />
               </div>
-              <div>
-                <h3 className="text-lg font-semibold">欢迎来到 NebulaHub</h3>
-                <p className="text-muted-foreground mt-1">
-                  您的应用程序仪表盘已准备就绪。从左侧导航栏访问各种功能。
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-slate-800">欢迎来到 NebulaHub</h3>
+                <p className="text-slate-500 mt-1">
+                  您的应用程序仪表盘已准备就绪。从左侧导航栏访问各种功能，开启您的私密交流之旅。
                 </p>
               </div>
+              <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-lg shadow-blue-500/25">
+                开始探索
+              </Button>
             </div>
           </CardContent>
         </Card>

@@ -52,21 +52,17 @@ export default async function DrivePage() {
     <LayoutWithFullWidth>
       <div className="space-y-6">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">
-              文件传输
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              管理和分享你的文件
-            </p>
+            <h1 className="text-3xl font-bold text-slate-800">文件传输</h1>
+            <p className="text-slate-500 mt-1">管理和分享你的文件</p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 hover:bg-slate-50">
               <Upload className="h-4 w-4" />
               上传文件
             </Button>
-            <Button className="gap-2">
+            <Button className="gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/25">
               <Folder className="h-4 w-4" />
               新建文件夹
             </Button>
@@ -74,25 +70,26 @@ export default async function DrivePage() {
         </div>
 
         {/* Search and View Options */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div className="relative w-96">
-              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Card className="overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500" />
+          <CardHeader className="flex flex-row items-center justify-between pb-4">
+            <div className="relative w-full max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="搜索文件..."
-                className="pl-8 pr-4 py-2 w-full rounded-lg border bg-background text-sm"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/20 focus:border-blue-400 transition-all"
               />
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="icon">
-                <Grid3X3 className="h-4 w-4" />
+              <Button variant="outline" size="icon" className="hover:bg-slate-50">
+                <Grid3X3 className="h-4 w-4 text-slate-500" />
               </Button>
-              <Button variant="outline" size="icon">
-                <List className="h-4 w-4" />
+              <Button variant="outline" size="icon" className="hover:bg-slate-50">
+                <List className="h-4 w-4 text-slate-500" />
               </Button>
-              <Button variant="outline" size="icon">
-                <MoreHorizontal className="h-4 w-4" />
+              <Button variant="outline" size="icon" className="hover:bg-slate-50">
+                <MoreHorizontal className="h-4 w-4 text-slate-500" />
               </Button>
             </div>
           </CardHeader>
@@ -101,27 +98,31 @@ export default async function DrivePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Folders Section */}
           <div className="lg:col-span-2">
-            <Card>
+            <Card className="overflow-hidden h-full">
+              <div className="h-1 bg-gradient-to-r from-blue-500 to-cyan-500" />
               <CardHeader>
-                <CardTitle>文件夹</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Folder className="h-5 w-5 text-blue-500" />
+                  文件夹
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {folders.map((folder) => (
                     <div 
                       key={folder.id} 
-                      className="flex items-center gap-4 p-4 rounded-lg border hover:bg-accent cursor-pointer transition-colors"
+                      className="flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-blue-50/50 cursor-pointer transition-all group"
                     >
-                      <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center group-hover:scale-105 transition-transform">
                         <Folder className="h-6 w-6 text-blue-500" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold truncate">{folder.name}</h4>
-                        <p className="text-sm text-muted-foreground">{folder.size}</p>
-                        <p className="text-xs text-muted-foreground">修改于 {folder.modified}</p>
+                        <h4 className="font-semibold text-slate-700 truncate">{folder.name}</h4>
+                        <p className="text-sm text-slate-400">{folder.size}</p>
+                        <p className="text-xs text-slate-300">修改于 {folder.modified}</p>
                       </div>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="h-4 w-4" />
+                      <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <MoreHorizontal className="h-4 w-4 text-slate-400" />
                       </Button>
                     </div>
                   ))}
@@ -132,45 +133,55 @@ export default async function DrivePage() {
 
           {/* Files Section */}
           <div>
-            <Card>
+            <Card className="overflow-hidden h-full">
+              <div className="h-1 bg-gradient-to-r from-green-500 to-emerald-500" />
               <CardHeader>
-                <CardTitle>最近文件</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <File className="h-5 w-5 text-green-500" />
+                  最近文件
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {files.map((file) => {
                     let IconComponent;
+                    let colorClass;
                     switch(file.type) {
                       case 'pdf':
                         IconComponent = FileText;
+                        colorClass = 'text-red-500 bg-red-500/10';
                         break;
                       case 'zip':
                         IconComponent = File;
+                        colorClass = 'text-amber-500 bg-amber-500/10';
                         break;
                       case 'docx':
                         IconComponent = FileText;
+                        colorClass = 'text-blue-500 bg-blue-500/10';
                         break;
                       case 'mp3':
                         IconComponent = Music;
+                        colorClass = 'text-purple-500 bg-purple-500/10';
                         break;
                       default:
                         IconComponent = File;
+                        colorClass = 'text-slate-500 bg-slate-500/10';
                     }
 
                     return (
                       <div 
                         key={file.id} 
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent cursor-pointer transition-colors"
+                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition-all group"
                       >
-                        <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                          <IconComponent className="h-5 w-5 text-green-500" />
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorClass}`}>
+                          <IconComponent className="h-5 w-5" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-sm truncate">{file.name}</h4>
-                          <p className="text-xs text-muted-foreground">{file.size} • {file.owner}</p>
+                          <h4 className="font-medium text-sm text-slate-700 truncate">{file.name}</h4>
+                          <p className="text-xs text-slate-400">{file.size} · {file.owner}</p>
                         </div>
-                        <Button variant="ghost" size="icon">
-                          <Download className="h-4 w-4" />
+                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Download className="h-4 w-4 text-slate-400" />
                         </Button>
                       </div>
                     );
@@ -182,43 +193,53 @@ export default async function DrivePage() {
         </div>
 
         {/* Shared with Me Section */}
-        <Card>
+        <Card className="overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500" />
           <CardHeader>
-            <CardTitle>共享给我的</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <span className="text-xl">👥</span>
+              共享给我的
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            <div className="overflow-hidden rounded-xl border border-slate-100">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-2 px-4">名称</th>
-                    <th className="text-left py-2 px-4">大小</th>
-                    <th className="text-left py-2 px-4">共享者</th>
-                    <th className="text-left py-2 px-4">修改日期</th>
-                    <th className="text-left py-2 px-4">操作</th>
+                  <tr className="bg-slate-50 border-b border-slate-100">
+                    <th className="text-left py-3 px-4 font-medium text-slate-600">名称</th>
+                    <th className="text-left py-3 px-4 font-medium text-slate-600">大小</th>
+                    <th className="text-left py-3 px-4 font-medium text-slate-600">共享者</th>
+                    <th className="text-left py-3 px-4 font-medium text-slate-600">修改日期</th>
+                    <th className="text-left py-3 px-4 font-medium text-slate-600">操作</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b hover:bg-accent/50">
-                    <td className="py-3 px-4 font-medium">项目提案.pptx</td>
-                    <td className="py-3 px-4 text-muted-foreground">3.2 MB</td>
-                    <td className="py-3 px-4 text-muted-foreground">Luna</td>
-                    <td className="py-3 px-4 text-muted-foreground">2024-01-10</td>
+                  <tr className="border-b border-slate-50 hover:bg-blue-50/50 transition-colors">
+                    <td className="py-3 px-4 font-medium text-slate-700 flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-blue-500" />
+                      项目提案.pptx
+                    </td>
+                    <td className="py-3 px-4 text-slate-500">3.2 MB</td>
+                    <td className="py-3 px-4 text-slate-500">Luna</td>
+                    <td className="py-3 px-4 text-slate-500">2024-01-10</td>
                     <td className="py-3 px-4">
-                      <Button variant="ghost" size="sm">
-                        <Download className="h-4 w-4 mr-1" />
+                      <Button variant="ghost" size="sm" className="gap-1 hover:bg-blue-50 hover:text-blue-600">
+                        <Download className="h-4 w-4" />
                         下载
                       </Button>
                     </td>
                   </tr>
-                  <tr className="border-b hover:bg-accent/50">
-                    <td className="py-3 px-4 font-medium">团队照片集.zip</td>
-                    <td className="py-3 px-4 text-muted-foreground">45.7 MB</td>
-                    <td className="py-3 px-4 text-muted-foreground">张三</td>
-                    <td className="py-3 px-4 text-muted-foreground">2024-01-08</td>
+                  <tr className="hover:bg-blue-50/50 transition-colors">
+                    <td className="py-3 px-4 font-medium text-slate-700 flex items-center gap-2">
+                      <File className="h-4 w-4 text-amber-500" />
+                      团队照片集.zip
+                    </td>
+                    <td className="py-3 px-4 text-slate-500">45.7 MB</td>
+                    <td className="py-3 px-4 text-slate-500">张三</td>
+                    <td className="py-3 px-4 text-slate-500">2024-01-08</td>
                     <td className="py-3 px-4">
-                      <Button variant="ghost" size="sm">
-                        <Download className="h-4 w-4 mr-1" />
+                      <Button variant="ghost" size="sm" className="gap-1 hover:bg-blue-50 hover:text-blue-600">
+                        <Download className="h-4 w-4" />
                         下载
                       </Button>
                     </td>

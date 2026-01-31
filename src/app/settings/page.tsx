@@ -321,32 +321,41 @@ export default function SettingsPage() {
         </div>
 
         {/* 头像设置 */}
-        <Card>
-          <CardHeader>
-            <CardTitle>个人头像</CardTitle>
+        <Card className="overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500" />
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2">
+              <User className="h-5 w-5 text-blue-500" />
+              个人头像
+            </CardTitle>
             <CardDescription>
               {userInfo.isGithubUser 
-                ? "你使用 GitHub 登录，头像来自 GitHub。可以上传自定义头像覆盖。" 
-                : "上传你的个人头像"}
+                ? "使用 GitHub 登录，头像来自 GitHub" 
+                : "上传你的个人头像，让朋友更容易认出你"}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-6">
-              {userInfo.avatarUrl ? (
-                <img
-                  src={userInfo.avatarUrl}
-                  alt="Avatar"
-                  className="w-24 h-24 rounded-full object-cover border-4 border-primary/10"
-                />
-              ) : (
-                <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary/10">
-                  <User className="h-12 w-12 text-primary" />
+              <div className="relative">
+                {userInfo.avatarUrl ? (
+                  <img
+                    src={userInfo.avatarUrl}
+                    alt="Avatar"
+                    className="w-24 h-24 rounded-2xl object-cover shadow-lg ring-4 ring-blue-500/10"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center shadow-lg ring-4 ring-blue-500/10">
+                    <User className="h-12 w-12 text-blue-500" />
+                  </div>
+                )}
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-br from-green-400 to-green-500 rounded-full border-2 border-white flex items-center justify-center shadow-md">
+                  <span className="text-white text-xs">✓</span>
                 </div>
-              )}
+              </div>
               
               <div className="flex-1">
                 <Label htmlFor="avatar-upload" className="cursor-pointer">
-                  <div className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors w-fit">
+                  <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg shadow-blue-500/25">
                     {uploading ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -355,7 +364,7 @@ export default function SettingsPage() {
                     ) : (
                       <>
                         <Upload className="h-4 w-4" />
-                        <span>上传新头像</span>
+                        <span className="font-medium">上传新头像</span>
                       </>
                     )}
                   </div>
@@ -368,144 +377,193 @@ export default function SettingsPage() {
                   onChange={handleAvatarUpload}
                   disabled={uploading}
                 />
-                <p className="text-xs text-muted-foreground mt-2">
-                  支持 JPG, PNG, GIF 格式，最大 5MB
-                </p>
+                <div className="mt-3 flex items-center gap-4 text-xs text-slate-400">
+                  <span className="flex items-center gap-1">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    支持 JPG, PNG, GIF
+                  </span>
+                  <span>最大 5MB</span>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* 基本信息 */}
-        <Card>
-          <CardHeader>
-            <CardTitle>基本信息</CardTitle>
+        <Card className="overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-cyan-500 to-blue-500" />
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2">
+              <User className="h-5 w-5 text-cyan-500" />
+              基本信息
+            </CardTitle>
             <CardDescription>
               {userInfo.isGithubUser 
                 ? "这些信息来自你的 GitHub 账号" 
                 : "你的账号基本信息"}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                电子邮箱
-              </Label>
-              <Input
-                id="email"
-                value={userInfo.email}
-                onChange={(e) => setUserInfo(prev => ({ ...prev, email: e.target.value }))}
-                disabled={userInfo.isGithubUser}
-                className={userInfo.isGithubUser ? "bg-muted" : ""}
-              />
-              <p className="text-xs text-muted-foreground">
-                {userInfo.isGithubUser 
-                  ? "邮箱地址来自 GitHub，无法修改" 
-                  : "修改邮箱后需要验证新地址"}
-              </p>
-            </div>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* 邮箱 */}
+              <div className="space-y-2">
+                <Label htmlFor="email" className="flex items-center gap-2 text-slate-600">
+                  <Mail className="h-4 w-4 text-slate-400" />
+                  电子邮箱
+                </Label>
+                <Input
+                  id="email"
+                  value={userInfo.email}
+                  onChange={(e) => setUserInfo(prev => ({ ...prev, email: e.target.value }))}
+                  disabled={userInfo.isGithubUser}
+                  className={userInfo.isGithubUser ? "bg-slate-50" : ""}
+                />
+                <p className="text-xs text-slate-400">
+                  {userInfo.isGithubUser 
+                    ? "来自 GitHub" 
+                    : "修改后需验证"}
+                </p>
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="username" className="flex items-center gap-2">
-                {userInfo.isGithubUser && <Github className="h-4 w-4" />}
-                用户名
-              </Label>
-              <Input
-                id="username"
-                value={userInfo.username}
-                onChange={(e) => setUserInfo(prev => ({ ...prev, username: e.target.value }))}
-                disabled={userInfo.isGithubUser}
-                className={userInfo.isGithubUser ? "bg-muted" : ""}
-              />
-              <p className="text-xs text-muted-foreground">
-                {userInfo.isGithubUser
-                  ? "用户名来自 GitHub，保持与 GitHub 账号一致"
-                  : "只能包含字母、数字和下划线，至少 3 个字符"}
-              </p>
-            </div>
+              {/* 用户名 */}
+              <div className="space-y-2">
+                <Label htmlFor="username" className="flex items-center gap-2 text-slate-600">
+                  {userInfo.isGithubUser && <Github className="h-4 w-4 text-slate-400" />}
+                  用户名
+                </Label>
+                <Input
+                  id="username"
+                  value={userInfo.username}
+                  onChange={(e) => setUserInfo(prev => ({ ...prev, username: e.target.value }))}
+                  disabled={userInfo.isGithubUser}
+                  className={userInfo.isGithubUser ? "bg-slate-50" : ""}
+                />
+                <p className="text-xs text-slate-400">
+                  {userInfo.isGithubUser
+                    ? "来自 GitHub"
+                    : "字母、数字、下划线"}
+                </p>
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="displayName">显示名称</Label>
-              <Input
-                id="displayName"
-                value={userInfo.displayName}
-                onChange={(e) => setUserInfo(prev => ({ ...prev, displayName: e.target.value }))}
-                placeholder="输入显示名称"
-                maxLength={100}
-              />
-              <p className="text-xs text-muted-foreground">
-                {userInfo.isGithubUser
-                  ? "GitHub 用户可以自定义显示名称"
-                  : "这是在其他用户看到的名称"}
-              </p>
+              {/* 显示名称 */}
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="displayName" className="text-slate-600">显示名称</Label>
+                <Input
+                  id="displayName"
+                  value={userInfo.displayName}
+                  onChange={(e) => setUserInfo(prev => ({ ...prev, displayName: e.target.value }))}
+                  placeholder="输入显示名称"
+                  maxLength={100}
+                  className="focus:border-cyan-400 focus:ring-cyan-400/20"
+                />
+                <div className="flex justify-end">
+                  <span className="text-xs text-slate-400">
+                    {userInfo.displayName.length}/100
+                  </span>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* 个人简介 */}
-        <Card>
-          <CardHeader>
-            <CardTitle>个人简介</CardTitle>
+        <Card className="overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500" />
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2">
+              <span className="text-xl">💬</span>
+              个人简介
+            </CardTitle>
+            <CardDescription>
+              介绍一下自己，让朋友们更好地了解你
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="bio">简介</Label>
+              <Label htmlFor="bio" className="text-slate-600">简介内容</Label>
               <Textarea
                 id="bio"
                 value={userInfo.bio}
                 onChange={(e) => setUserInfo(prev => ({ ...prev, bio: e.target.value }))}
-                placeholder="写点什么..."
-                rows={4}
+                placeholder="写点什么介绍自己..."
+                rows={3}
                 maxLength={500}
+                className="resize-none focus:border-purple-400 focus:ring-purple-400/20"
               />
-              <p className="text-xs text-muted-foreground text-right">
-                {userInfo.bio.length} / 500
-              </p>
+              <div className="flex justify-end">
+                <span className={`text-xs ${userInfo.bio.length >= 500 ? 'text-red-500' : 'text-slate-400'}`}>
+                  {userInfo.bio.length} / 500
+                </span>
+              </div>
             </div>
 
-            <Button onClick={handleSave} disabled={saving} className="w-full sm:w-auto">
-              {saving ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  保存中...
-                </>
-              ) : (
-                "保存更改"
-              )}
-            </Button>
+            <div className="flex justify-end pt-2">
+              <Button 
+                onClick={handleSave} 
+                disabled={saving}
+                className="gap-2 px-6 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/25"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>保存中...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>💾</span>
+                    <span className="font-medium">保存更改</span>
+                  </>
+                )}
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
         {/* 账号信息提示 */}
         {userInfo.isGithubUser ? (
-          <Card className="border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-400">
+          <Card className="overflow-hidden border-0 shadow-lg shadow-blue-500/5">
+            <div className="h-1 bg-gradient-to-r from-gray-800 to-gray-900" />
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
                 <Github className="h-5 w-5" />
                 GitHub 账号
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-blue-600 dark:text-blue-300">
-                你正在使用 GitHub 账号登录。用户名和邮箱与你的 GitHub 账号保持同步。
-                你可以自定义<strong>显示名称</strong>、<strong>头像</strong>和<strong>个人简介</strong>，这不会影响你的账号一致性。
-              </p>
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-900/50">
+                <div className="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                  <Github className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                    你正在使用 <strong>GitHub 账号</strong>登录。用户名和邮箱与你的 GitHub 账号保持同步。
+                    你可以自定义<strong>显示名称</strong>、<strong>头像</strong>和<strong>个人简介</strong>，这不会影响账号一致性。
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         ) : (
-          <Card className="border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
+          <Card className="overflow-hidden border-0 shadow-lg shadow-green-500/5">
+            <div className="h-1 bg-gradient-to-r from-green-500 to-emerald-500" />
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
                 <Mail className="h-5 w-5" />
                 邮箱账号
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-green-600 dark:text-green-300">
-                你正在使用邮箱账号登录。你可以修改你的<strong>用户名</strong>、<strong>邮箱</strong>、<strong>显示名称</strong>、<strong>头像</strong>和<strong>个人简介</strong>。
-                你的账号唯一标识基于 UUID，修改信息不会影响账号一致性。
-              </p>
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-green-50 dark:bg-green-900/20">
+                <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/50 flex items-center justify-center flex-shrink-0">
+                  <Mail className="h-5 w-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                    你正在使用<strong>邮箱账号</strong>登录。你可以修改用户名、邮箱、显示名称、头像和个人简介。
+                    你的账号唯一标识基于 UUID，修改信息不会影响账号一致性。
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}
