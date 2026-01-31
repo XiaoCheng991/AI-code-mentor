@@ -46,6 +46,8 @@ export default function ChatPage() {
     { id: '3', name: '李四', avatar: '', status: 'offline', lastSeen: '今天 15:30' },
     { id: '4', name: '王五', avatar: '', status: 'busy' },
     { id: '5', name: '赵六', avatar: '', status: 'online' },
+    { id: '6', name: '孙七', avatar: '', status: 'online' },
+    { id: '7', name: '周八', avatar: '', status: 'offline', lastSeen: '今天 14:10' },
   ]);
 
   const [conversations, setConversations] = useState<Conversation[]>([
@@ -54,6 +56,8 @@ export default function ChatPage() {
     { id: 'conv-3', type: 'user', name: '张三', avatar: '', lastMessage: '收到，谢谢！', time: '16:20', unread: 0, isPinned: false },
     { id: 'conv-4', type: 'group', name: '工作闲聊群', avatar: '', lastMessage: 'Alice: 会议推迟到明天', time: '昨天', unread: 3, isPinned: false },
     { id: 'conv-5', type: 'user', name: '李四', avatar: '', lastMessage: '记得明天的会议', time: '昨天', unread: 0, isPinned: false },
+    // { id: 'conv-6', type: 'user', name: '孙七', avatar: '', lastMessage: '记得明天的会议', time: '昨天', unread: 0, isPinned: false },
+    // { id: 'conv-7', type: 'user', name: '周八', avatar: '', lastMessage: '记得明天的会议', time: '昨天', unread: 0, isPinned: false },
   ]);
 
   const [activeConversation, setActiveConversation] = useState<string | null>('conv-1');
@@ -68,17 +72,13 @@ export default function ChatPage() {
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
-  // 使用 useLayoutEffect 确保在 DOM 渲染后立即滚动到底部（仅当有新消息时）
+  // 滚动到底部功能（仅在发送新消息时调用）
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  useLayoutEffect(() => {
-    // 只有在有消息时才滚动到底部，避免初始化时不必要的滚动
-    if (messages.length > 0) {
-      scrollToBottom();
-    }
-  }, [messages]);
+  // 初始化时不自动滚动到底部，避免页面跳转时的意外滚动
+  // 只在发送新消息时调用scrollToBottom()
 
 
   const handleSendMessage = () => {
@@ -109,19 +109,20 @@ export default function ChatPage() {
   // 判断是否显示时间戳 - 如果与上一条消息间隔超过5分钟，则显示时间
   const shouldShowTime = (index: number, messagesArray: Message[]) => {
     if (index === 0) return true;
-    
+
     const currentMessageTime = new Date(messagesArray[index].timestamp).getTime();
     const prevMessageTime = new Date(messagesArray[index - 1].timestamp).getTime();
-    
+
     // 如果时间差超过5分钟（300000毫秒），则显示时间
     return (currentMessageTime - prevMessageTime) > 300000;
   };
 
   return (
     <ChatLayout>
-      <div className="flex h-full overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100">
+      {/*手动计算固定距离*/}
+      <div className="flex h-[calc(100vh-85px)] overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100">
         {/* Sidebar - Contact list */}
-        <div className="w-80 border-r bg-white flex flex-col shadow-sm">
+        <div className="h-full border-r bg-white flex flex-col shadow-sm pl-2">
           {/* Header */}
           <div className="p-4 border-b bg-white">
             <div className="flex items-center justify-between mb-4">
@@ -159,8 +160,8 @@ export default function ChatPage() {
                   key={conversation.id}
                   className={cn(
                     "flex items-center gap-3 p-3 hover:bg-slate-50 cursor-pointer transition-all duration-200 border-l-4",
-                    activeConversation === conversation.id 
-                      ? "bg-blue-50 border-l-blue-500" 
+                    activeConversation === conversation.id
+                      ? "bg-blue-50 border-l-blue-500"
                       : "border-l-transparent"
                   )}
                   onClick={() => setActiveConversation(conversation.id)}
@@ -170,8 +171,8 @@ export default function ChatPage() {
                       <AvatarImage src={conversation.avatar} />
                       <AvatarFallback className={cn(
                         "text-lg",
-                        conversation.type === 'group' 
-                          ? "bg-gradient-to-br from-violet-400 to-violet-500 text-white" 
+                        conversation.type === 'group'
+                          ? "bg-gradient-to-br from-violet-400 to-violet-500 text-white"
                           : "bg-gradient-to-br from-blue-400 to-blue-500 text-white"
                       )}>
                         {conversation.type === 'group' ? '👥' : conversation.name.charAt(0)}
@@ -214,9 +215,9 @@ export default function ChatPage() {
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col bg-white/50 backdrop-blur-sm">
+        <div className="h-full flex-1 flex flex-col bg-white/50 backdrop-blur-sm">
           {activeConv ? (
-            <>
+            <div className="flex flex-col h-full">
               {/* Chat Header */}
               <div className="border-b p-4 flex items-center justify-between bg-white shadow-sm z-10">
                 <div className="flex items-center gap-3">
@@ -225,8 +226,8 @@ export default function ChatPage() {
                       <AvatarImage src={activeConv.avatar} />
                       <AvatarFallback className={cn(
                         "font-medium",
-                        activeConv.type === 'group' 
-                          ? "bg-gradient-to-br from-violet-400 to-violet-500 text-white" 
+                        activeConv.type === 'group'
+                          ? "bg-gradient-to-br from-violet-400 to-violet-500 text-white"
                           : "bg-gradient-to-br from-blue-400 to-blue-500 text-white"
                       )}>
                         {activeConv.type === 'group' ? '👥' : activeConv.name.charAt(0)}
@@ -254,60 +255,64 @@ export default function ChatPage() {
                 </div>
               </div>
 
-              {/* Messages */}
-              <div className="flex-1 overflow-y-hidden p-2 space-y-2 bg-gradient-to-b from-slate-50 to-white">
-                {messages.map((message, index) => (
-                  <div key={message.id} className="flex flex-col items-start w-full">
-                    {/* 时间标签 - 仅在间隔超过5分钟时显示 */}
-                    {shouldShowTime(index, messages) && (
-                      <div className="self-center my-2 px-3 py-1 bg-slate-200 text-slate-600 text-xs rounded-full">
-                        {formatTime(message.timestamp instanceof Date ? message.timestamp : new Date(message.timestamp))}
-                      </div>
-                    )}
-                    <div className="flex w-full">
-                      <div
-                        className={cn(
-                          "max-w-xs lg:max-w-md px-4 py-2 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md",
-                          message.senderId === 'me'
-                            ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-br-sm ml-auto'
-                            : 'bg-white text-slate-800 rounded-tl-sm border border-slate-100 mr-auto'
-                        )}
-                      >
-                        <p className="leading-relaxed">{message.content}</p>
+              {/* Messages & Input Container - Use flex to ensure input stays at bottom */}
+              <div className="flex-1 flex flex-col">
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-gradient-to-b from-slate-50 to-white">
+                  {messages.map((message, index) => (
+                    <div key={message.id} className="flex flex-col items-start w-full">
+                      {/* 时间标签 - 仅在间隔超过5分钟时显示 */}
+                      {shouldShowTime(index, messages) && (
+                        <div className="self-center my-2 px-3 py-1 bg-slate-200 text-slate-600 text-xs rounded-full">
+                          {formatTime(message.timestamp instanceof Date ? message.timestamp : new Date(message.timestamp))}
+                        </div>
+                      )}
+                      <div className="flex w-full">
+                        <div
+                          className={cn(
+                            "max-w-xs lg:max-w-md px-4 py-2 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md",
+                            message.senderId === 'me'
+                              ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-br-sm ml-auto'
+                              : 'bg-white text-slate-800 rounded-tl-sm border border-slate-100 mr-auto'
+                          )}
+                        >
+                          <p className="leading-relaxed">{message.content}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
 
-              {/* Message Input */}
-              <div className="border-t p-2 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-                <div className="flex items-end gap-2">
-                  <div className="flex-1 bg-slate-50 rounded-2xl p-2 border border-slate-200 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/20 transition-all">
-                    <textarea
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyDown={handleKeyPress}
-                      placeholder="输入消息..."
-                      className="w-full bg-transparent border-none resize-none focus:outline-none h-10 max-h-20 text-slate-700 placeholder:text-slate-400"
-                    />
+                {/* Message Input - Fixed at bottom */}
+                <div className="border-t p-2 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-shrink-0">
+                  <div className="flex items-end gap-2">
+                    <div className="flex-1 bg-slate-50 rounded-2xl p-2 border border-slate-200 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/20 transition-all">
+                      <textarea
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyDown={handleKeyPress}
+                        placeholder="输入消息..."
+                        className="w-full bg-transparent border-none resize-none focus:outline-none h-10 max-h-20 text-slate-700 placeholder:text-slate-400"
+                        style={{ maxHeight: '6rem', resize: 'none' }}
+                      />
+                    </div>
+                    <Button
+                      onClick={handleSendMessage}
+                      disabled={!newMessage.trim()}
+                      className={cn(
+                        "h-10 w-10 p-0 rounded-xl transition-all duration-200",
+                        newMessage.trim()
+                          ? "bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30"
+                          : "bg-slate-200"
+                      )}
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <Button
-                    onClick={handleSendMessage}
-                    disabled={!newMessage.trim()}
-                    className={cn(
-                      "h-10 w-10 p-0 rounded-xl transition-all duration-200",
-                      newMessage.trim()
-                        ? "bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30"
-                        : "bg-slate-200"
-                    )}
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
                 </div>
               </div>
-            </>
+            </div>
           ) : (
             <div className="flex-1 flex items-center justify-center text-slate-400 bg-gradient-to-br from-slate-50 to-slate-100">
               <div className="text-center">
