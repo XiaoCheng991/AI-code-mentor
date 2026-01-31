@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, Phone, Video, Search, Plus, Send, MoreVertical, Users, UserPlus } from "lucide-react";
 import Link from "next/link";
-import LayoutWithSidebar from "@/components/LayoutWithSidebar";
+import ChatLayout from "@/components/ChatLayout";
 import { formatTime } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
@@ -115,9 +115,9 @@ export default function ChatPage() {
   };
 
   return (
-    <LayoutWithSidebar>
-      <div className="flex h-[90dvh] overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100">
-        {/* Sidebar - Hidden on mobile since it's a dedicated chat page */}
+    <ChatLayout>
+      <div className="flex h-full overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100">
+        {/* Sidebar - Contact list */}
         <div className="w-80 border-r bg-white flex flex-col shadow-sm">
           {/* Header */}
           <div className="p-4 border-b bg-white">
@@ -318,6 +318,6 @@ export default function ChatPage() {
           )}
         </div>
       </div>
-    </LayoutWithSidebar>
+    </ChatLayout>
   );
 }

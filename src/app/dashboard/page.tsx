@@ -1,7 +1,7 @@
 
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import LayoutWithSidebar from "@/components/LayoutWithSidebar";
+import LayoutWithFullWidth from "@/components/LayoutWithFullWidth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <LayoutWithSidebar>
+    <LayoutWithFullWidth>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">仪表盘</h1>
@@ -137,6 +137,6 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-    </LayoutWithSidebar>
+    </LayoutWithFullWidth>
   );
 }

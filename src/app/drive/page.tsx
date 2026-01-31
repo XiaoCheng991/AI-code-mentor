@@ -16,7 +16,7 @@ import {
   Grid3X3,
   List
 } from "lucide-react"
-import LayoutWithSidebar from "@/components/LayoutWithSidebar"
+import LayoutWithFullWidth from "@/components/LayoutWithFullWidth"
 
 export default async function DrivePage() {
   const supabase = createServerSupabaseClient();
@@ -49,7 +49,7 @@ export default async function DrivePage() {
   ];
 
   return (
-    <LayoutWithSidebar>
+    <LayoutWithFullWidth>
       <div className="space-y-6">
         {/* Page Header */}
         <div className="flex items-center justify-between">
@@ -229,6 +229,6 @@ export default async function DrivePage() {
           </CardContent>
         </Card>
       </div>
-    </LayoutWithSidebar>
+    </LayoutWithFullWidth>
   )
 }

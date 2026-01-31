@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
 import { UserAvatar } from '@/components/ui/user-avatar';
+import { MessageCircle, Settings, Sparkles, FolderUp } from 'lucide-react';
 
 type GlobalHeaderProps = {
   className?: string;
@@ -92,6 +93,37 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
           </div>
         </Link>
 
+        <nav className="hidden md:flex items-center space-x-1 mx-auto">
+          <Link 
+            href="/dashboard" 
+            className="flex items-center gap-2 p-2 rounded-lg transition-colors duration-200 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+          >
+            <Sparkles className="h-5 w-5" />
+            <span className="text-sm font-medium hidden sm:block">仪表盘</span>
+          </Link>
+          <Link 
+            href="/chat" 
+            className="flex items-center gap-2 p-2 rounded-lg transition-colors duration-200 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+          >
+            <MessageCircle className="h-5 w-5" />
+            <span className="text-sm font-medium hidden sm:block">消息</span>
+          </Link>
+          <Link 
+            href="/drive" 
+            className="flex items-center gap-2 p-2 rounded-lg transition-colors duration-200 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+          >
+            <FolderUp className="h-5 w-5" />
+            <span className="text-sm font-medium hidden sm:block">文件</span>
+          </Link>
+          <Link 
+            href="/settings" 
+            className="flex items-center gap-2 p-2 rounded-lg transition-colors duration-200 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+          >
+            <Settings className="h-5 w-5" />
+            <span className="text-sm font-medium hidden sm:block">设置</span>
+          </Link>
+        </nav>
+        
         <div className="flex items-center gap-2">
           {user ? (
             <Link href="/dashboard/settings" className="flex items-center gap-2.5 p-2 rounded-xl bg-transparent hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">

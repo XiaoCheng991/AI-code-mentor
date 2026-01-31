@@ -11,7 +11,7 @@ import { toast } from "@/components/ui/use-toast"
 import { Upload, Github, Mail, User, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { AvatarCropDialog } from "@/components/ui/avatar-crop-dialog"
-import LayoutWithSidebar from "@/components/LayoutWithSidebar"
+import LayoutWithFullWidth from "@/components/LayoutWithFullWidth"
 
 export default function SettingsPage() {
   const router = useRouter()
@@ -302,16 +302,16 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <LayoutWithSidebar>
+      <LayoutWithFullWidth>
         <div className="flex items-center justify-center min-h-[400px]">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-      </LayoutWithSidebar>
+      </LayoutWithFullWidth>
     )
   }
 
   return (
-    <LayoutWithSidebar>
+    <LayoutWithFullWidth>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold">账号设置</h1>
@@ -520,6 +520,6 @@ export default function SettingsPage() {
           />
         )}
       </div>
-    </LayoutWithSidebar>
+    </LayoutWithFullWidth>
   )
 }
