@@ -4,6 +4,7 @@ import "./globals.css";
 import GlobalHeader from '@/components/branding/GlobalHeader';
 import { Toaster } from "@/components/ui/toaster";
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import ScrollTopOnMount from '@/components/ScrollTopOnMount';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -53,9 +54,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   
   return (
     <html lang="zh-CN" suppressHydrationWarning>
-      <body className={inter.className}>
-        <GlobalHeader initialUser={initialUser} />
-        {children}
+      <body className={`${inter.className} scroll-smooth`}>
+        <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 overflow-hidden">
+          <GlobalHeader initialUser={initialUser} />
+          <main className="flex-1 w-full overflow-y-auto pt-4">
+            {children}
+          </main>
+        </div>
+        <ScrollTopOnMount />
         <Toaster />
       </body>
     </html>

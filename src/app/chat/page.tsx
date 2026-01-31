@@ -68,13 +68,16 @@ export default function ChatPage() {
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
-  // 使用 useLayoutEffect 确保在 DOM 渲染后立即滚动到底部
+  // 使用 useLayoutEffect 确保在 DOM 渲染后立即滚动到底部（仅当有新消息时）
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useLayoutEffect(() => {
-    scrollToBottom();
+    // 只有在有消息时才滚动到底部，避免初始化时不必要的滚动
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
   }, [messages]);
 
 
