@@ -19,8 +19,8 @@ export default function LayoutWithSidebar({ children }: LayoutWithSidebarProps) 
       </div>
 
       {/* Main content */}
-      <main className="pt-8 pl-24 transition-all duration-300">
-        <div className="container mx-auto px-6 py-6">
+      <main className="pt-16 pl-24 pr-0 mr-0 transition-all duration-300">
+        <div className="container mx-auto px-6 py-6 pt-0 pr-0">
           {children}
         </div>
       </main>

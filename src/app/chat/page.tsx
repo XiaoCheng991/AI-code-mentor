@@ -77,14 +77,6 @@ export default function ChatPage() {
     scrollToBottom();
   }, [messages]);
 
-  // 初始加载时强制滚动到底部
-  useEffect(() => {
-    // 延迟一小段时间确保 DOM 完全渲染
-    const timer = setTimeout(() => {
-      scrollToBottom();
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleSendMessage = () => {
     if (newMessage.trim() === '') return;
@@ -111,9 +103,20 @@ export default function ChatPage() {
 
   const activeConv = conversations.find(c => c.id === activeConversation);
 
+  // 判断是否显示时间戳 - 如果与上一条消息间隔超过5分钟，则显示时间
+  const shouldShowTime = (index: number, messagesArray: Message[]) => {
+    if (index === 0) return true;
+    
+    const currentMessageTime = new Date(messagesArray[index].timestamp).getTime();
+    const prevMessageTime = new Date(messagesArray[index - 1].timestamp).getTime();
+    
+    // 如果时间差超过5分钟（300000毫秒），则显示时间
+    return (currentMessageTime - prevMessageTime) > 300000;
+  };
+
   return (
     <LayoutWithSidebar>
-      <div className="flex h-[100dvh] overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="flex h-[90dvh] overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100">
         {/* Sidebar - Hidden on mobile since it's a dedicated chat page */}
         <div className="w-80 border-r bg-white flex flex-col shadow-sm">
           {/* Header */}
@@ -249,34 +252,26 @@ export default function ChatPage() {
               </div>
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-slate-50 to-white">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${message.senderId === 'me' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={cn(
-                        "max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md",
-                        message.senderId === 'me'
-                          ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-br-sm'
-                          : 'bg-white text-slate-800 rounded-tl-sm border border-slate-100'
-                      )}
-                    >
-                      {message.senderId !== 'me' && (
-                        <p className="text-xs font-medium text-blue-500 mb-1">
-                          {message.senderName}
-                        </p>
-                      )}
-                      <p className="leading-relaxed">{message.content}</p>
-                      <p className={cn(
-                        "text-xs mt-1",
-                        message.senderId === 'me' ? 'text-white/70' : 'text-slate-400'
-                      )}>
+              <div className="flex-1 overflow-y-hidden p-2 space-y-2 bg-gradient-to-b from-slate-50 to-white">
+                {messages.map((message, index) => (
+                  <div key={message.id} className="flex flex-col items-start w-full">
+                    {/* 时间标签 - 仅在间隔超过5分钟时显示 */}
+                    {shouldShowTime(index, messages) && (
+                      <div className="self-center my-2 px-3 py-1 bg-slate-200 text-slate-600 text-xs rounded-full">
                         {formatTime(message.timestamp instanceof Date ? message.timestamp : new Date(message.timestamp))}
-                        {message.senderId === 'me' && message.status === 'read' && ' ✓✓'}
-                        {message.senderId === 'me' && message.status === 'delivered' && ' ✓'}
-                      </p>
+                      </div>
+                    )}
+                    <div className="flex w-full">
+                      <div
+                        className={cn(
+                          "max-w-xs lg:max-w-md px-4 py-2 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md",
+                          message.senderId === 'me'
+                            ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-br-sm ml-auto'
+                            : 'bg-white text-slate-800 rounded-tl-sm border border-slate-100 mr-auto'
+                        )}
+                      >
+                        <p className="leading-relaxed">{message.content}</p>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -284,7 +279,7 @@ export default function ChatPage() {
               </div>
 
               {/* Message Input */}
-              <div className="border-t p-4 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+              <div className="border-t p-2 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
                 <div className="flex items-end gap-2">
                   <div className="flex-1 bg-slate-50 rounded-2xl p-2 border border-slate-200 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/20 transition-all">
                     <textarea
@@ -292,20 +287,20 @@ export default function ChatPage() {
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyDown={handleKeyPress}
                       placeholder="输入消息..."
-                      className="w-full bg-transparent border-none resize-none focus:outline-none h-12 max-h-32 text-slate-700 placeholder:text-slate-400"
+                      className="w-full bg-transparent border-none resize-none focus:outline-none h-10 max-h-20 text-slate-700 placeholder:text-slate-400"
                     />
                   </div>
                   <Button
                     onClick={handleSendMessage}
                     disabled={!newMessage.trim()}
                     className={cn(
-                      "h-12 w-12 p-0 rounded-xl transition-all duration-200",
+                      "h-10 w-10 p-0 rounded-xl transition-all duration-200",
                       newMessage.trim()
                         ? "bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30"
                         : "bg-slate-200"
                     )}
                   >
-                    <Send className="h-5 w-5" />
+                    <Send className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
