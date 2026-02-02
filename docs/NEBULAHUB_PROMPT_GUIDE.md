@@ -113,7 +113,7 @@
 ## 现有目录结构
 
 ```
-ai-code-mentor/
+NebulaHub/
 ├── src/
 │   ├── app/                    # Next.js App Router 页面
 │   │   ├── (auth)/             # 认证相关页面

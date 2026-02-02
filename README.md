@@ -23,7 +23,7 @@
 ## 项目结构
 
 ```
-ai-code-mentor/
+NebulaHub/
 ├── src/
 │   ├── app/                    # Next.js App Router页面
 │   │   ├── (auth)/            # 认证相关页面
@@ -136,8 +136,8 @@ npm run dev
 ### Docker
 
 ```bash
-docker build -t ai-code-mentor .
-docker run -p 3000:3000 ai-code-mentor
+docker build -t NebulaHub .
+docker run -p 3000:3000 NebulaHub
 ```
 
 ## 开发说明
