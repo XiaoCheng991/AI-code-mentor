@@ -312,7 +312,7 @@ export default function SettingsPage() {
 
   return (
     <LayoutWithFullWidth>
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div>
           <h1 className="text-3xl font-bold">账号设置</h1>
           <p className="text-muted-foreground mt-1">
@@ -321,8 +321,7 @@ export default function SettingsPage() {
         </div>
 
         {/* 头像设置 */}
-        <Card className="overflow-hidden">
-          <div className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500" />
+        <Card>
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5 text-blue-500" />
@@ -390,8 +389,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* 基本信息 */}
-        <Card className="overflow-hidden">
-          <div className="h-1 bg-gradient-to-r from-cyan-500 to-blue-500" />
+        <Card>
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5 text-cyan-500" />
@@ -467,8 +465,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* 个人简介 */}
-        <Card className="overflow-hidden">
-          <div className="h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500" />
+        <Card>
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2">
               <span className="text-xl">💬</span>
@@ -521,8 +518,7 @@ export default function SettingsPage() {
 
         {/* 账号信息提示 */}
         {userInfo.isGithubUser ? (
-          <Card className="overflow-hidden border-0 shadow-lg shadow-blue-500/5">
-            <div className="h-1 bg-gradient-to-r from-gray-800 to-gray-900" />
+          <Card className="border-0 shadow-lg shadow-blue-500/5">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Github className="h-5 w-5" />
@@ -544,8 +540,7 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="overflow-hidden border-0 shadow-lg shadow-green-500/5">
-            <div className="h-1 bg-gradient-to-r from-green-500 to-emerald-500" />
+          <Card className="border-0 shadow-lg shadow-green-500/5">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Mail className="h-5 w-5" />

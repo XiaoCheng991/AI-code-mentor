@@ -43,7 +43,7 @@ export default async function DashboardPage() {
 
   return (
     <LayoutWithFullWidth>
-      <div className="space-y-8">
+      <div className="space-y-4">
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -61,13 +61,7 @@ export default async function DashboardPage() {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat, index) => (
-            <Card key={index} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
-              <div className={`h-1 ${
-                index === 0 ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
-                index === 1 ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
-                index === 2 ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
-                'bg-gradient-to-r from-amber-500 to-orange-500'
-              }`} />
+            <Card key={index} className="hover:shadow-lg transition-all duration-300 group">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
@@ -99,10 +93,9 @@ export default async function DashboardPage() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Recent Activity */}
-          <Card className="overflow-hidden">
-            <div className="h-1 bg-gradient-to-r from-purple-500 to-pink-500" />
+          <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-slate-800">最近活动</h3>
@@ -126,8 +119,7 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Quick Actions */}
-          <Card className="overflow-hidden">
-            <div className="h-1 bg-gradient-to-r from-cyan-500 to-blue-500" />
+          <Card>
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold mb-4 text-slate-800">快捷操作</h3>
               <div className="grid grid-cols-2 gap-3">
@@ -161,8 +153,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Welcome Section */}
-        <Card className="overflow-hidden">
-          <div className="h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500" />
+        <Card>
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20">

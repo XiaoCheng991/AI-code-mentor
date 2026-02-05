@@ -50,7 +50,7 @@ export default async function DrivePage() {
 
   return (
     <LayoutWithFullWidth>
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -70,8 +70,7 @@ export default async function DrivePage() {
         </div>
 
         {/* Search and View Options */}
-        <Card className="overflow-hidden">
-          <div className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500" />
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-4">
             <div className="relative w-full max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -95,11 +94,10 @@ export default async function DrivePage() {
           </CardHeader>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Folders Section */}
           <div className="lg:col-span-2">
-            <Card className="overflow-hidden h-full">
-              <div className="h-1 bg-gradient-to-r from-blue-500 to-cyan-500" />
+            <Card className="h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Folder className="h-5 w-5 text-blue-500" />
@@ -133,8 +131,7 @@ export default async function DrivePage() {
 
           {/* Files Section */}
           <div>
-            <Card className="overflow-hidden h-full">
-              <div className="h-1 bg-gradient-to-r from-green-500 to-emerald-500" />
+            <Card className="h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <File className="h-5 w-5 text-green-500" />
@@ -193,8 +190,7 @@ export default async function DrivePage() {
         </div>
 
         {/* Shared with Me Section */}
-        <Card className="overflow-hidden">
-          <div className="h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500" />
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <span className="text-xl">👥</span>
